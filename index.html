@@ -33,7 +33,6 @@
         .floating-icon {
             animation: float 4s ease-in-out infinite;
         }
-        /* Mengelakkan limpahan emoji jika nombor terlalu besar */
         .emoji-container {
             max-height: 110px;
             overflow-y: auto;
@@ -52,7 +51,7 @@
     <!-- CONTAINER UTAMA -->
     <div id="app" class="max-w-md mx-auto bg-white/80 backdrop-blur-md rounded-[30px] shadow-2xl border-4 border-white overflow-hidden min-h-[85vh] flex flex-col justify-between relative">
         
-        <!-- HEADER UTAMA (Sentiasa dipaparkan kecuali di skrin Login) -->
+        <!-- HEADER UTAMA -->
         <header id="app-header" class="hidden bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-4 rounded-b-[25px] shadow-lg">
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-2">
@@ -99,11 +98,10 @@
                     <span class="absolute -right-4 -bottom-4 text-7xl opacity-20">🎯</span>
                 </div>
 
-                <!-- Menu Grid Utama (Latihan Tambah, Latihan Sifir & Statistik) -->
                 <div class="grid grid-cols-1 gap-4">
                     <div class="grid grid-cols-2 gap-4">
-                        <button onclick="openExercise('tambah')" class="p-4 bg-pink-500 text-white rounded-[20px] shadow-md border-b-4 border-pink-700 font-black text-lg flex flex-col items-center gap-2 bounce-hover">
-                            <span class="text-3xl bg-white/20 p-2 rounded-full material-icons">add_circle</span> Tambah (0-40)
+                        <button onclick="changeScreen('sub-tambah')" class="p-4 bg-pink-500 text-white rounded-[20px] shadow-md border-b-4 border-pink-700 font-black text-lg flex flex-col items-center gap-2 bounce-hover">
+                            <span class="text-3xl bg-white/20 p-2 rounded-full material-icons">add_circle</span> Latihan Tambah
                         </button>
                         <button onclick="openExercise('sifir')" class="p-4 bg-orange-500 text-white rounded-[20px] shadow-md border-b-4 border-orange-700 font-black text-lg flex flex-col items-center gap-2 bounce-hover">
                             <span class="text-3xl bg-white/20 p-2 rounded-full material-icons">edit</span> Latihan Sifir
@@ -114,7 +112,6 @@
                     </button>
                 </div>
 
-                <!-- Senarai Badges Kecil -->
                 <div class="bg-white p-4 rounded-[20px] border border-slate-100 shadow-sm">
                     <h4 class="font-black text-slate-700 text-sm mb-2 flex items-center gap-1"><span class="text-amber-500 material-icons">military_tech</span> Koleksi Badge Saya</h4>
                     <div class="flex gap-2 overflow-x-auto py-1" id="home-badges-list">
@@ -124,25 +121,45 @@
                 </div>
             </section>
 
+            <!-- 2B. SUB-HALAMAN: PILIHAN TAHAP TAMBAH -->
+            <section id="screen-sub-tambah" class="hidden space-y-5">
+                <div class="flex items-center gap-3">
+                    <button onclick="changeScreen('home')" class="bg-slate-200 p-2 rounded-full flex items-center"><span class="material-icons">arrow_back</span></button>
+                    <h3 class="font-black text-xl text-pink-600">Pilih Tahap Tambah</h3>
+                </div>
+
+                <div class="space-y-4 pt-2">
+                    <button onclick="openExercise('tambah-1')" class="w-full p-5 bg-gradient-to-r from-teal-400 to-emerald-500 text-white rounded-2xl shadow-md border-b-4 border-emerald-700 text-left flex items-center justify-between bounce-hover">
+                        <div>
+                            <div class="font-black text-xl">🟢 Beginner</div>
+                            <div class="text-xs text-emerald-100 font-bold mt-1">Tambah 1 Digit Bergambar (1-9)</div>
+                        </div>
+                        <span class="material-icons text-3xl">child_care</span>
+                    </button>
+
+                    <button onclick="openExercise('tambah-2')" class="w-full p-5 bg-gradient-to-r from-pink-400 to-rose-500 text-white rounded-2xl shadow-md border-b-4 border-rose-700 text-left flex items-center justify-between bounce-hover">
+                        <div>
+                            <div class="font-black text-xl">🔥 Advanced</div>
+                            <div class="text-xs text-rose-100 font-bold mt-1">Tambah 2 Digit Bergambar (Maks 40)</div>
+                        </div>
+                        <span class="material-icons text-3xl">insights</span>
+                    </button>
+                </div>
+            </section>
+
             <!-- 3. HALAMAN LATIHAN (KUIZ GAMBAR) -->
             <section id="screen-exercise" class="hidden space-y-4">
                 <div class="flex justify-between items-center">
-                    <button onclick="changeScreen('home')" class="bg-slate-200 p-2 rounded-full flex items-center"><span class="material-icons">arrow_back</span></button>
+                    <button onclick="goBackFromExercise()" class="bg-slate-200 p-2 rounded-full flex items-center"><span class="material-icons">arrow_back</span></button>
                     <h3 class="font-black text-xl text-orange-600" id="exercise-title">Latihan</h3>
                     <div class="w-8"></div>
                 </div>
 
-                <!-- Papan Soalan dengan Visual Gambar/Emoji Rawak -->
                 <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl space-y-3 text-center shadow-inner">
                     <span class="text-xs font-bold text-amber-700 uppercase tracking-wider block" id="exercise-subtitle">Kira Gambar Di Bawah</span>
                     
-                    <!-- Bahagian Gambar Rawak Objek 1 -->
                     <div id="visual-part-1" class="emoji-container text-xl"></div>
-                    
-                    <!-- Simbol Operasi (+ atau ×) -->
                     <div class="text-2xl font-black text-purple-600 my-1" id="exercise-operator">+</div>
-                    
-                    <!-- Bahagian Gambar Rawak Objek 2 -->
                     <div id="visual-part-2" class="emoji-container text-xl"></div>
                     
                     <div class="text-2xl font-black text-slate-700 mt-2 pt-2 border-t border-dashed border-amber-200" id="exercise-text-question">
@@ -150,9 +167,8 @@
                     </div>
                 </div>
 
-                <!-- Pilihan Jawapan -->
                 <div class="grid grid-cols-2 gap-3" id="exercise-options">
-                    <!-- Pilihan jawapan dijana di sini -->
+                    <!-- Jawapan dijana di sini -->
                 </div>
 
                 <div id="exercise-feedback" class="hidden text-center p-3 rounded-xl font-black text-lg"></div>
@@ -190,12 +206,12 @@
 
         </main>
 
-        <!-- FOOTER / MENU NAVIGASI BAWAH (Sentiasa ada selepas Login) -->
+        <!-- FOOTER / MENU NAVIGASI BAWAH -->
         <footer id="app-footer" class="hidden bg-white border-t border-slate-100 p-2 flex justify-around items-center rounded-t-[25px] shadow-inner">
             <button onclick="changeScreen('home')" class="flex flex-col items-center gap-0.5 text-blue-500 font-bold text-xs">
                 <span class="material-icons text-2xl">home</span> Utama
             </button>
-            <button onclick="openExercise('tambah')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-pink-500 font-bold text-xs">
+            <button onclick="changeScreen('sub-tambah')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-pink-500 font-bold text-xs">
                 <span class="material-icons text-2xl">add_circle</span> Tambah
             </button>
             <button onclick="openExercise('sifir')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-orange-500 font-bold text-xs">
@@ -208,9 +224,7 @@
 
     </div>
 
-    <!-- LOGIK JAVASCRIPT APLIKASI -->
     <script>
-        // Data Negeri Semasa Pengguna
         let player = {
             name: "Tetamu",
             level: 1,
@@ -221,14 +235,10 @@
             totalAnswers: 0
         };
 
-        // Konfigurasi Jenis Latihan Aktif
-        let currentMode = 'sifir'; // 'sifir' atau 'tambah'
+        let currentMode = 'sifir'; 
         let currentQuestion = { num1: 0, num2: 0, correct: 0 };
-
-        // Senarai Emoji Rawak yang menarik untuk kanak-kanak
         const emojiList = ['🍎', '🍓', '🎈', '⭐', '🚗', '🐱', '🦖', '🍬', '🍩', '🚀', '🐝', '🐼', '🌻', '⚽'];
 
-        // 1. Log Masuk sebagai Tetamu
         function loginAsGuest() {
             const inputName = document.getElementById('login-name').value.trim();
             if(inputName) player.name = inputName;
@@ -240,9 +250,8 @@
             changeScreen('home');
         }
 
-        // 2. Tukar Skrin Secara Dinamik
         function changeScreen(screenId) {
-            const screens = ['screen-login', 'screen-home', 'screen-exercise', 'screen-stats'];
+            const screens = ['screen-login', 'screen-home', 'screen-sub-tambah', 'screen-exercise', 'screen-stats'];
             screens.forEach(s => document.getElementById(s).classList.add('hidden'));
             
             document.getElementById(`screen-${screenId}`).classList.remove('hidden');
@@ -252,17 +261,29 @@
             }
         }
 
-        // 3. Membuka dan Memulakan Latihan Khusus
+        function goBackFromExercise() {
+            if(currentMode.startsWith('tambah')) {
+                changeScreen('sub-tambah');
+            } else {
+                changeScreen('home');
+            }
+        }
+
         function openExercise(mode) {
             currentMode = mode;
             const titleElement = document.getElementById('exercise-title');
             const subElement = document.getElementById('exercise-subtitle');
             const opElement = document.getElementById('exercise-operator');
 
-            if(mode === 'tambah') {
-                titleElement.innerText = "Latihan Tambah";
+            if(mode === 'tambah-1') {
+                titleElement.innerText = "Tambah Beginner";
+                titleElement.className = "font-black text-xl text-teal-600";
+                subElement.innerText = "Kira Gambar 1 Digit";
+                opElement.innerText = "+";
+            } else if(mode === 'tambah-2') {
+                titleElement.innerText = "Tambah Advanced";
                 titleElement.className = "font-black text-xl text-pink-600";
-                subElement.innerText = "Kira Jumlah Semua Gambar Objek";
+                subElement.innerText = "Kira Gambar 2 Digit";
                 opElement.innerText = "+";
             } else {
                 titleElement.innerText = "Latihan Sifir";
@@ -275,65 +296,57 @@
             generateQuestion();
         }
 
-        // 4. Janakan Soalan Pintar Bersama Gambar Emoji Rawak
         function generateQuestion() {
             document.getElementById('exercise-feedback').classList.add('hidden');
             
             let num1 = 0;
             let num2 = 0;
             let correctResult = 0;
-
-            // Pilih satu jenis emoji secara rawak untuk soalan ini
             const randomEmoji = emojiList[Math.floor(Math.random() * emojiList.length)];
 
-            if(currentMode === 'tambah') {
-                // Operasi Tambah: Hasil tambah maksimum ialah 40 (contoh: 20 + 20)
+            if(currentMode === 'tambah-1') {
+                // Beginner: 1 Digit Bergambar (1 hingga 9)
+                num1 = Math.floor(Math.random() * 9) + 1;
+                num2 = Math.floor(Math.random() * 9) + 1;
+                correctResult = num1 + num2;
+                document.getElementById('exercise-text-question').innerText = `${num1} + ${num2} = ?`;
+            } else if(currentMode === 'tambah-2') {
+                // Advanced: 2 Digit Bergambar up to 40
                 num1 = Math.floor(Math.random() * 20) + 1;
                 num2 = Math.floor(Math.random() * 20) + 1;
                 correctResult = num1 + num2;
-                
                 document.getElementById('exercise-text-question').innerText = `${num1} + ${num2} = ?`;
             } else {
-                // Operasi Sifir: Sifir 2 hingga 12
+                // Latihan Sifir
                 num1 = Math.floor(Math.random() * 11) + 2; 
                 num2 = Math.floor(Math.random() * 12) + 1; 
                 correctResult = num1 * num2;
-                
                 document.getElementById('exercise-text-question').innerText = `${num1} × ${num2} = ?`;
             }
 
             currentQuestion = { num1, num2, correct: correctResult };
 
-            // Papar Gambar Emoji Rawak mengikut nilai num1 dan num2
             const part1Container = document.getElementById('visual-part-1');
             const part2Container = document.getElementById('visual-part-2');
             
             part1Container.innerHTML = '';
             part2Container.innerHTML = '';
 
-            // Isi objek gambar pertama
-            for(let i = 0; i < num1; i++) {
-                part1Container.innerHTML += `<span>${randomEmoji}</span>`;
-            }
-            // Isi objek gambar kedua
-            for(let i = 0; i < num2; i++) {
-                part2Container.innerHTML += `<span>${randomEmoji}</span>`;
-            }
+            for(let i = 0; i < num1; i++) part1Container.innerHTML += `<span>${randomEmoji}</span>`;
+            for(let i = 0; i < num2; i++) part2Container.innerHTML += `<span>${randomEmoji}</span>`;
 
-            // Janakan pilihan jawapan rawak (1 betul, 3 salah)
+            // Janakan pilihan jawapan (1 betul, 3 salah)
             let options = new Set();
             options.add(correctResult);
             while(options.size < 4) {
-                let deviation = (Math.floor(Math.random() * 5) + 1) * (Math.random() < 0.5 ? 1 : -1);
+                let deviation = (Math.floor(Math.random() * 4) + 1) * (Math.random() < 0.5 ? 1 : -1);
                 let fake = correctResult + deviation;
                 if(fake > 0 && fake !== correctResult && fake <= 150) {
                     options.add(fake);
                 }
             }
 
-            // Susun semula kedudukan pilihan secara rawak
             const optionsArray = Array.from(options).sort(() => Math.random() - 0.5);
-            
             const optionsContainer = document.getElementById('exercise-options');
             optionsContainer.innerHTML = '';
             
@@ -346,7 +359,6 @@
             });
         }
 
-        // 5. Periksa Jawapan Pilihan Murid
         function checkAnswer(chosen) {
             player.totalAnswers++;
             const feedback = document.getElementById('exercise-feedback');
@@ -357,15 +369,12 @@
                 feedback.className = "text-center p-3 rounded-xl font-black text-lg bg-green-100 text-green-700";
                 feedback.innerText = "🎉 BETUL! Kamu bijak! 👍";
                 
-                // Ganjaran Gamifikasi
                 player.xp += 20;
                 player.stars += 2;
                 player.coins += 5;
                 
-                // Letupan kesan bintang kejayaan (Confetti)
                 confetti({ particleCount: 70, spread: 60, origin: { y: 0.7 } });
                 
-                // Mekanisme Naik Tahap
                 if(player.xp >= 100) {
                     player.level++;
                     player.xp = player.xp % 100;
@@ -380,7 +389,6 @@
             }
         }
 
-        // 6. Kemas kini Paparan Header Atas
         function updateHeaderData() {
             document.getElementById('user-level-badge').innerText = `Lvl ${player.level}`;
             document.getElementById('header-xp').innerText = `XP: ${player.xp} / 100`;
@@ -388,7 +396,6 @@
             document.getElementById('header-coins').innerText = player.coins;
         }
 
-        // 7. Kemas kini UI Halaman Grafik Statistik
         function updateStatsUI() {
             document.getElementById('stat-total').innerText = player.totalAnswers;
             document.getElementById('stat-correct').innerText = player.correctAnswers;
