@@ -108,7 +108,7 @@
             <!-- 1. HALAMAN LOGIN -->
             <section id="screen-login" class="text-center space-y-6 py-6">
                 <div class="space-y-2">
-                    <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-purple-600 to-blue-600 tracking-wider uppercase drop-shadow-sm">Bijak Tambah</h1>
+                    <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-purple-600 to-blue-600 tracking-wider uppercase drop-shadow-sm">Bijak Sifir & Tambah</h1>
                     <p class="text-slate-600 font-bold text-sm bg-orange-100 text-orange-700 py-1 px-3 rounded-full inline-block">Gamifikasi Matematik Seronok! 🚀</p>
                 </div>
                 
@@ -133,9 +133,14 @@
                 </div>
 
                 <div class="grid grid-cols-1 gap-4">
-                    <button onclick="changeScreen('sub-tambah')" class="p-5 bg-pink-500 text-white rounded-[20px] shadow-md border-b-4 border-pink-700 font-black text-xl flex flex-col items-center gap-2 bounce-hover w-full">
-                        <span class="text-4xl bg-white/20 p-2 rounded-full material-icons">add_circle</span> Mula Latihan Tambah
-                    </button>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="changeScreen('sub-tambah')" class="p-4 bg-pink-500 text-white rounded-[20px] shadow-md border-b-4 border-pink-700 font-black text-lg flex flex-col items-center gap-2 bounce-hover">
+                            <span class="text-3xl bg-white/20 p-2 rounded-full material-icons">add_circle</span> Latihan Tambah
+                        </button>
+                        <button onclick="openExercise('sifir')" class="p-4 bg-orange-500 text-white rounded-[20px] shadow-md border-b-4 border-orange-700 font-black text-lg flex flex-col items-center gap-2 bounce-hover">
+                            <span class="text-3xl bg-white/20 p-2 rounded-full material-icons">edit</span> Latihan Sifir
+                        </button>
+                    </div>
                     <button onclick="changeScreen('stats')" class="p-4 bg-emerald-500 text-white rounded-[20px] shadow-md border-b-4 border-emerald-700 font-black text-lg flex flex-col items-center gap-2 bounce-hover w-full">
                         <span class="text-3xl bg-white/20 p-2 rounded-full material-icons">bar_chart</span> Lihat Statistik Pencapaian
                     </button>
@@ -304,6 +309,9 @@
             <button onclick="changeScreen('sub-tambah')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-pink-500 font-bold text-xs">
                 <span class="material-icons text-2xl">add_circle</span> Tambah
             </button>
+            <button onclick="openExercise('sifir')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-orange-500 font-bold text-xs">
+                <span class="material-icons text-2xl">edit</span> Sifir
+            </button>
             <button onclick="changeScreen('stats')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500 font-bold text-xs">
                 <span class="material-icons text-2xl">bar_chart</span> Grafik
             </button>
@@ -351,7 +359,11 @@
         }
 
         function goBackFromExercise() {
-            changeScreen('sub-tambah');
+            if(currentMode.startsWith('tambah')) {
+                changeScreen('sub-tambah');
+            } else {
+                changeScreen('home');
+            }
         }
 
         function openExercise(mode) {
@@ -372,20 +384,29 @@
                 titleElement.innerText = "Tambah Beginner";
                 titleElement.className = "font-black text-xl text-teal-600";
                 subElement.innerText = "Kira Gambar 1 Digit";
+                subElement.classList.remove('hidden');
                 document.getElementById('exercise-operator').innerText = "+";
             } else if(mode === 'tambah-2') {
                 titleElement.innerText = "Tambah Advanced";
                 titleElement.className = "font-black text-xl text-pink-600";
                 subElement.innerText = "Kira Gambar 2 Digit";
+                subElement.classList.remove('hidden');
                 document.getElementById('exercise-operator').innerText = "+";
             } else if(mode === 'tambah-lazim') {
                 titleElement.innerText = "Bentuk Lazim 2 Digit";
                 titleElement.className = "font-black text-xl text-indigo-600";
                 subElement.innerText = "Pilih nombor di bawah untuk mengisi petak";
+                subElement.classList.remove('hidden');
                 visualBox.classList.add('hidden');
                 optionsBox.classList.add('hidden'); 
                 lazimBox.classList.remove('hidden');
                 keyboardBox.classList.remove('hidden');
+            } else if(mode === 'sifir') {
+                titleElement.innerText = "Latihan Sifir";
+                titleElement.className = "font-black text-xl text-orange-600";
+                subElement.innerText = ""; 
+                subElement.classList.add('hidden'); // Sembunyikan pembantu untuk paparan bersih
+                document.getElementById('exercise-operator').innerText = "×";
             }
 
             changeScreen('exercise');
@@ -437,6 +458,14 @@
                 manualData = { carryPuluh: "", ansPuluh: "", ansSa: "" };
                 renderBoxValues();
                 setActiveInput('ans-sa');
+            } else if(currentMode === 'sifir') {
+                num1 = Math.floor(Math.random() * 10) + 2; // Sifir 2 hingga 11
+                num2 = Math.floor(Math.random() * 12) + 1; // Darab 1 hingga 12
+                correctResult = num1 * num2;
+                document.getElementById('exercise-text-question').innerText = `${num1} × ${num2} = ?`;
+                
+                part1Container.innerHTML = '';
+                part2Container.innerHTML = '';
             }
 
             currentQuestion = { num1, num2, correct: correctResult };
@@ -445,7 +474,7 @@
                 let options = new Set();
                 options.add(correctResult);
                 while(options.size < 4) {
-                    let deviation = (Math.floor(Math.random() * 4) + 1) * (Math.random() < 0.5 ? 1 : -1);
+                    let deviation = (Math.floor(Math.random() * 5) + 1) * (Math.random() < 0.5 ? 1 : -1);
                     let fake = correctResult + deviation;
                     if(fake > 0 && fake !== correctResult && fake <= 200) options.add(fake);
                 }
