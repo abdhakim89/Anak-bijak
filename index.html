@@ -44,13 +44,27 @@
             background: rgba(255, 255, 255, 0.6);
             border-radius: 12px;
         }
-        /* Gaya khusus untuk susunan Bentuk Lazim */
-        .standard-form {
-            font-family: monospace;
-            font-size: 2.5rem;
-            line-height: 1.2;
-            display: inline-block;
-            text-align: right;
+        /* Gaya khusus reka bentuk Bentuk Lazim */
+        .lazim-table {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2.2rem;
+            font-weight: 900;
+        }
+        .lazim-input {
+            width: 45px;
+            text-align: center;
+            border-radius: 8px;
+            padding: 2px;
+            font-weight: 900;
+        }
+        .carry-input {
+            width: 35px;
+            height: 35px;
+            text-align: center;
+            font-size: 1.2rem;
+            border-radius: 6px;
+            color: #ef4444;
+            background-color: #fef2f2;
         }
     </style>
 </head>
@@ -148,14 +162,14 @@
                     <button onclick="openExercise('tambah-lazim')" class="w-full p-4 bg-gradient-to-r from-indigo-400 to-purple-500 text-white rounded-2xl shadow-md border-b-4 border-purple-700 text-left flex items-center justify-between bounce-hover">
                         <div>
                             <div class="font-black text-lg">📝 Bentuk Lazim</div>
-                            <div class="text-xs text-indigo-100 font-bold mt-0.5">Operasi Tambah Menegak (2 Digit)</div>
+                            <div class="text-xs text-indigo-100 font-bold mt-0.5">Input Manual Menegak (Ada Ruang Kumpul)</div>
                         </div>
                         <span class="material-icons text-2xl">format_align_right</span>
                     </button>
                 </div>
             </section>
 
-            <!-- 3. HALAMAN LATIHAN (DINAMIK GAMBAR / BENTUK LAZIM) -->
+            <!-- 3. HALAMAN LATIHAN -->
             <section id="screen-exercise" class="hidden space-y-4">
                 <div class="flex justify-between items-center">
                     <button onclick="goBackFromExercise()" class="bg-slate-200 p-2 rounded-full flex items-center"><span class="material-icons">arrow_back</span></button>
@@ -166,29 +180,54 @@
                 <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl space-y-3 text-center shadow-inner flex flex-col items-center justify-center">
                     <span class="text-xs font-bold text-amber-700 uppercase tracking-wider block self-stretch" id="exercise-subtitle">Kira Selesaikan Soalan</span>
                     
-                    <!-- KONTEN BERGAMBAR (Untuk Sifir & Tambah Bergambar) -->
+                    <!-- KONTEN BERGAMBAR (Untuk Pilihan Objektif) -->
                     <div id="container-visual-mode" class="w-full space-y-2">
                         <div id="visual-part-1" class="emoji-container text-xl"></div>
                         <div class="text-2xl font-black text-purple-600 my-1" id="exercise-operator">+</div>
                         <div id="visual-part-2" class="emoji-container text-xl"></div>
-                    </div>
-
-                    <!-- KONTEN BENTUK LAZIM (Untuk Tambah Menegak) -->
-                    <div id="container-lazim-mode" class="hidden py-4 px-8 bg-white border-2 border-slate-200 rounded-xl shadow-sm">
-                        <div class="standard-form font-mono font-black tracking-widest text-slate-700">
-                            <div id="lazim-num1">25</div>
-                            <div class="border-b-4 border-slate-800 pb-1">+ <span id="lazim-num2">14</span></div>
-                            <div class="text-slate-300 pt-1">??</div>
+                        
+                        <div class="text-2xl font-black text-slate-700 mt-2 pt-2 border-t border-dashed border-amber-200 w-full" id="exercise-text-question">
+                            ? + ? = ?
                         </div>
                     </div>
-                    
-                    <!-- Teks Soalan Mendatar -->
-                    <div class="text-2xl font-black text-slate-700 mt-2 pt-2 border-t border-dashed border-amber-200 w-full" id="exercise-text-question">
-                        ? + ? = ?
+
+                    <!-- KONTEN BENTUK LAZIM (Input Manual) -->
+                    <div id="container-lazim-mode" class="hidden py-4 px-6 bg-white border-2 border-slate-200 rounded-2xl shadow-sm w-full max-w-[260px]">
+                        <table class="lazim-table mx-auto text-slate-700">
+                            <!-- Baris Ruang Kosong Pengumpul Atas (Carry Over) -->
+                            <tr class="text-center">
+                                <td></td>
+                                <td><input type="text" id="carry-puluh" maxlength="1" placeholder=" " class="carry-input border border-dashed border-red-300 focus:outline-none focus:border-red-500 font-bold transition-all"></td>
+                                <td><input type="text" id="carry-sa" maxlength="1" placeholder=" " class="carry-input border border-dashed border-slate-200 focus:outline-none font-bold transition-all invisible"></td>
+                            </tr>
+                            <!-- Nombor Pertama -->
+                            <tr>
+                                <td></td>
+                                <td id="l-num1-p" class="text-center px-2">2</td>
+                                <td id="l-num1-s" class="text-center px-2">5</td>
+                            </tr>
+                            <!-- Nombor Kedua -->
+                            <tr class="border-b-4 border-slate-800">
+                                <td class="text-purple-600 text-xl font-sans pr-2">+</td>
+                                <td id="l-num2-p" class="text-center px-2">1</td>
+                                <td id="l-num2-s" class="text-center px-2">6</td>
+                            </tr>
+                            <!-- Ruang Input Jawapan Manual Murid -->
+                            <tr class="pt-2">
+                                <td></td>
+                                <td class="p-1"><input type="number" id="ans-puluh" min="0" max="9" class="lazim-input bg-slate-100 border-2 border-slate-300 focus:bg-amber-50 focus:border-amber-500 focus:outline-none transition-all" placeholder="?"></td>
+                                <td class="p-1"><input type="number" id="ans-sa" min="0" max="9" class="lazim-input bg-slate-100 border-2 border-slate-300 focus:bg-amber-50 focus:border-amber-500 focus:outline-none transition-all" placeholder="?"></td>
+                            </tr>
+                        </table>
+
+                        <!-- Butang Semak untuk Bentuk Lazim Manual -->
+                        <button onclick="checkManualLazimAnswer()" class="mt-4 w-full bg-indigo-600 text-white font-black py-2 rounded-xl shadow-md hover:bg-indigo-700 transition-colors">
+                            Semak Jawapan 🚀
+                        </button>
                     </div>
                 </div>
 
-                <!-- Pilihan Jawapan -->
+                <!-- Pilihan Objektif Grid (Disorokkan jika Mod Bentuk Lazim) -->
                 <div class="grid grid-cols-2 gap-3" id="exercise-options">
                     <!-- Jawapan dijana di sini -->
                 </div>
@@ -291,10 +330,12 @@
             const subElement = document.getElementById('exercise-subtitle');
             const visualBox = document.getElementById('container-visual-mode');
             const lazimBox = document.getElementById('container-lazim-mode');
+            const optionsBox = document.getElementById('exercise-options');
 
-            // Set default paparan konten hiasan
+            // Tetapkan semula paparan asas
             visualBox.classList.remove('hidden');
             lazimBox.classList.add('hidden');
+            optionsBox.classList.remove('hidden');
 
             if(mode === 'tambah-1') {
                 titleElement.innerText = "Tambah Beginner";
@@ -305,10 +346,11 @@
                 titleElement.className = "font-black text-xl text-pink-600";
                 subElement.innerText = "Kira Gambar 2 Digit";
             } else if(mode === 'tambah-lazim') {
-                titleElement.innerText = "Bentuk Lazim";
+                titleElement.innerText = "Bentuk Lazim 2 Digit";
                 titleElement.className = "font-black text-xl text-indigo-600";
-                subElement.innerText = "Selesaikan Kiraan Menegak";
+                subElement.innerText = "Isi tempat kosong & kumpul semula";
                 visualBox.classList.add('hidden');
+                optionsBox.classList.add('hidden'); // Sorok pilihan jawapan objektif
                 lazimBox.classList.remove('hidden');
             } else {
                 titleElement.innerText = "Latihan Sifir";
@@ -340,15 +382,30 @@
                 correctResult = num1 + num2;
                 document.getElementById('exercise-text-question').innerText = `${num1} + ${num2} = ?`;
             } else if(currentMode === 'tambah-lazim') {
-                // Bentuk Lazim 2 Digit (cth: 10 hingga 49)
-                num1 = Math.floor(Math.random() * 40) + 10;
-                num2 = Math.floor(Math.random() * 40) + 10;
+                // Sediakan soalan 2 digit (10-49) supaya ada kemungkinan kumpul semula ke atas
+                num1 = Math.floor(Math.random() * 39) + 10;
+                num2 = Math.floor(Math.random() * 39) + 10;
                 correctResult = num1 + num2;
+
+                // Pisahkan Digit Sa dan Puluh
+                let n1_puluh = Math.floor(num1 / 10);
+                let n1_sa = num1 % 10;
+                let n2_puluh = Math.floor(num2 / 10);
+                let n2_sa = num2 % 10;
+
+                // Kemas kini paparan jadual bentuk lazim
+                document.getElementById('l-num1-p').innerText = n1_puluh;
+                document.getElementById('l-num1-s').innerText = n1_sa;
+                document.getElementById('l-num2-p').innerText = n2_puluh;
+                document.getElementById('l-num2-s').innerText = n2_sa;
+
+                // Kosongkan semula kotak input manual murid
+                document.getElementById('carry-puluh').value = "";
+                document.getElementById('ans-puluh').value = "";
+                document.getElementById('ans-sa').value = "";
                 
-                // Kemas kini komponen bentuk lazim
-                document.getElementById('lazim-num1').innerText = num1;
-                document.getElementById('lazim-num2').innerText = num2;
-                document.getElementById('exercise-text-question').innerText = "Berapakah jumlah jawapannya?";
+                // Fokus automatik pada kotak Sa terlebih dahulu
+                document.getElementById('ans-sa').focus();
             } else {
                 num1 = Math.floor(Math.random() * 11) + 2; 
                 num2 = Math.floor(Math.random() * 12) + 1; 
@@ -358,7 +415,7 @@
 
             currentQuestion = { num1, num2, correct: correctResult };
 
-            // Render komponen visual emoji jika bukan bentuk lazim
+            // Bina ganjaran grafik bagi pilihan hiasan objektif bergambar
             if(currentMode !== 'tambah-lazim') {
                 const part1Container = document.getElementById('visual-part-1');
                 const part2Container = document.getElementById('visual-part-2');
@@ -366,60 +423,106 @@
                 part2Container.innerHTML = '';
                 for(let i = 0; i < num1; i++) part1Container.innerHTML += `<span>${randomEmoji}</span>`;
                 for(let i = 0; i < num2; i++) part2Container.innerHTML += `<span>${randomEmoji}</span>`;
-            }
 
-            // Janakan pilihan jawapan (1 betul, 3 salah)
-            let options = new Set();
-            options.add(correctResult);
-            while(options.size < 4) {
-                let deviation = (Math.floor(Math.random() * 4) + 1) * (Math.random() < 0.5 ? 1 : -1);
-                let fake = correctResult + deviation;
-                if(fake > 0 && fake !== correctResult && fake <= 200) {
-                    options.add(fake);
+                // Janakan pilihan objektif
+                let options = new Set();
+                options.add(correctResult);
+                while(options.size < 4) {
+                    let deviation = (Math.floor(Math.random() * 4) + 1) * (Math.random() < 0.5 ? 1 : -1);
+                    let fake = correctResult + deviation;
+                    if(fake > 0 && fake !== correctResult && fake <= 200) options.add(fake);
                 }
-            }
 
-            const optionsArray = Array.from(options).sort(() => Math.random() - 0.5);
-            const optionsContainer = document.getElementById('exercise-options');
-            optionsContainer.innerHTML = '';
-            
-            optionsArray.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "p-4 bg-white hover:bg-slate-50 border-2 border-slate-200 active:border-blue-500 rounded-xl font-black text-xl text-slate-700 shadow-sm transition-all bounce-hover";
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswer(opt);
-                optionsContainer.appendChild(btn);
-            });
+                const optionsArray = Array.from(options).sort(() => Math.random() - 0.5);
+                const optionsContainer = document.getElementById('exercise-options');
+                optionsContainer.innerHTML = '';
+                
+                optionsArray.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = "p-4 bg-white hover:bg-slate-50 border-2 border-slate-200 active:border-blue-500 rounded-xl font-black text-xl text-slate-700 shadow-sm transition-all bounce-hover";
+                    btn.innerText = opt;
+                    btn.onclick = () => checkAnswer(opt);
+                    optionsContainer.appendChild(btn);
+                });
+            }
         }
 
-        function checkAnswer(chosen) {
-            player.totalAnswers++;
-            const feedback = document.getElementById('exercise-feedback');
-            feedback.classList.remove('hidden');
+        // Semak jawapan manual bentuk lazim murid
+        function checkManualLazimAnswer() {
+            const inputSa = document.getElementById('ans-sa').value.trim();
+            const inputPuluh = document.getElementById('ans-puluh').value.trim();
+            const inputCarry = document.getElementById('carry-puluh').value.trim();
 
-            if(chosen === currentQuestion.correct) {
-                player.correctAnswers++;
-                feedback.className = "text-center p-3 rounded-xl font-black text-lg bg-green-100 text-green-700";
-                feedback.innerText = "🎉 BETUL! Kamu bijak! 👍";
-                
-                player.xp += 20;
-                player.stars += 2;
-                player.coins += 5;
-                
-                confetti({ particleCount: 70, spread: 60, origin: { y: 0.7 } });
-                
-                if(player.xp >= 100) {
-                    player.level++;
-                    player.xp = player.xp % 100;
-                }
-                
-                updateHeaderData();
-                setTimeout(generateQuestion, 1800);
+            if (inputSa === "" || inputPuluh === "") {
+                alert("Sila isi kedua-dua ruang jawapan Sa dan Puluh dahulu!");
+                return;
+            }
+
+            // Cantumkan input puluh dan sa untuk jawapan penuh murid
+            const studentTotal = parseInt(inputPuluh + inputSa);
+            
+            // Pengiraan pembuktian kumpul semula (carry over) semakan sistem
+            let sa1 = currentQuestion.num1 % 10;
+            let sa2 = currentQuestion.num2 % 10;
+            let perluCarry = (sa1 + sa2) >= 10;
+
+            let carryBetul = true;
+            if (perluCarry && inputCarry !== "1") {
+                carryBetul = false;
+            }
+
+            // Semak jika keseluruhan betul
+            if (studentTotal === currentQuestion.correct && carryBetul) {
+                processCorrectAnswer();
             } else {
-                feedback.className = "text-center p-3 rounded-xl font-black text-lg bg-red-100 text-red-700";
+                const feedback = document.getElementById('exercise-feedback');
+                feedback.classList.remove('hidden');
+                feedback.className = "text-center p-3 rounded-xl font-black text-lg bg-red-100 text-red-700 w-full";
+                
+                if(!carryBetul) {
+                    feedback.innerText = "❌ Nombor jawapan betul, tapi kamu lupa letakkan nombor '1' di ruang kosong pengumpul atas!";
+                } else {
+                    feedback.innerText = `❌ Jawapan kurang tepat. Cuba kira sekali lagi!`;
+                }
+            }
+        }
+
+        // Semak jawapan bagi mod objektif biasa
+        function checkAnswer(chosen) {
+            if(chosen === currentQuestion.correct) {
+                processCorrectAnswer();
+            } else {
+                const feedback = document.getElementById('exercise-feedback');
+                feedback.classList.remove('hidden');
+                feedback.className = "text-center p-3 rounded-xl font-black text-lg bg-red-100 text-red-700 w-full";
                 feedback.innerText = `❌ Cuba lagi! Jawapan sebenar ialah ${currentQuestion.correct}`;
                 setTimeout(generateQuestion, 2500);
             }
+        }
+
+        // Fungsi kongsi kemenangan/hadiah ganjaran
+        function processCorrectAnswer() {
+            player.totalAnswers++;
+            player.correctAnswers++;
+            
+            const feedback = document.getElementById('exercise-feedback');
+            feedback.classList.remove('hidden');
+            feedback.className = "text-center p-3 rounded-xl font-black text-lg bg-green-100 text-green-700 w-full";
+            feedback.innerText = "🎉 BETUL! Kamu memang bijak! 👍";
+            
+            player.xp += 25;
+            player.stars += 3;
+            player.coins += 5;
+            
+            confetti({ particleCount: 70, spread: 60, origin: { y: 0.7 } });
+            
+            if(player.xp >= 100) {
+                player.level++;
+                player.xp = player.xp % 100;
+            }
+            
+            updateHeaderData();
+            setTimeout(generateQuestion, 1800);
         }
 
         function updateHeaderData() {
