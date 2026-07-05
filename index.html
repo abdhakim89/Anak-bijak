@@ -166,7 +166,6 @@
                     <button onclick="openExercise('tambah-2')" class="w-full p-4 bg-gradient-to-r from-pink-400 to-rose-500 text-white rounded-2xl shadow-md border-b-4 border-rose-700 text-left flex items-center justify-between bounce-hover">
                         <div>
                             <div class="font-black text-lg">🔥 Advanced</div>
-                            <!-- Had Maksimum dikemas kini di sini -->
                             <div class="text-xs text-rose-100 font-bold mt-0.5">Tambah 2 Digit Bergambar (Maks 20)</div>
                         </div>
                         <span class="material-icons text-2xl">insights</span>
@@ -193,13 +192,13 @@
                 <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl space-y-3 text-center shadow-inner flex flex-col items-center justify-center relative">
                     <span class="text-xs font-bold text-amber-700 uppercase tracking-wider block self-stretch" id="exercise-subtitle">Kira Selesaikan Soalan</span>
                     
-                    <!-- KONTEN BERGAMBAR (Pilihan Objektif) -->
+                    <!-- KONTEN BERGAMBAR / TEKS SOALAN UTAMA -->
                     <div id="container-visual-mode" class="w-full space-y-2">
                         <div id="visual-part-1" class="emoji-container text-xl"></div>
                         <div class="text-2xl font-black text-purple-600 my-1" id="exercise-operator">+</div>
                         <div id="visual-part-2" class="emoji-container text-xl"></div>
                         
-                        <div class="text-2xl font-black text-slate-700 mt-2 pt-2 border-t border-dashed border-amber-200 w-full" id="exercise-text-question">
+                        <div class="text-3xl font-black text-slate-700 mt-2 pt-2 border-t border-dashed border-amber-200 w-full" id="exercise-text-question">
                             ? + ? = ?
                         </div>
                     </div>
@@ -207,7 +206,7 @@
                     <!-- KONTEN BENTUK LAZIM (Pilihan Nombor Berasingan) -->
                     <div id="container-lazim-mode" class="hidden py-4 px-6 bg-white border-2 border-slate-200 rounded-2xl shadow-sm w-full max-w-[260px]">
                         <table class="lazim-table mx-auto text-slate-700">
-                            <!-- Baris Atas (Carry Over / Ruang Kumpul Semula) -->
+                            <!-- Baris Atas -->
                             <tr class="text-center">
                                 <td></td>
                                 <td><div id="box-carry-puluh" onclick="setActiveInput('carry-puluh')" class="carry-box border border-dashed border-red-300 bg-red-50/50 font-bold">&nbsp;</div></td>
@@ -240,12 +239,12 @@
                     </div>
                 </div>
 
-                <!-- Pilihan Objektif Grid (Untuk Latihan Gambar Biasa & Sifir) -->
+                <!-- Pilihan Objektif Grid -->
                 <div class="grid grid-cols-2 gap-3" id="exercise-options">
                     <!-- Jawapan dijana di sini -->
                 </div>
 
-                <!-- PAPAN PILIHAN NOMBOR 0-9 (Khusus untuk Bentuk Lazim) -->
+                <!-- PAPAN PILIHAN NOMBOR 0-9 -->
                 <div id="container-keyboard" class="hidden bg-white/90 border border-slate-200 p-3 rounded-2xl shadow-md space-y-2">
                     <p class="text-center text-xs font-bold text-slate-500 mb-1">Klik petak hijau/kelabu di atas, kemudian pilih nombor:</p>
                     <div class="grid grid-cols-5 gap-2">
@@ -333,9 +332,8 @@
 
         let currentMode = 'sifir'; 
         let currentQuestion = { num1: 0, num2: 0, correct: 0 };
-        let activeInputTarget = 'ans-sa'; // Menyimpan sasaran petak yang sedang aktif
+        let activeInputTarget = 'ans-sa'; 
         
-        // Data nilai tersimpan bagi bentuk lazim manual
         let manualData = {
             carryPuluh: "",
             ansPuluh: "",
@@ -377,7 +375,6 @@
             const optionsBox = document.getElementById('exercise-options');
             const keyboardBox = document.getElementById('container-keyboard');
 
-            // Reset paparan struktur
             visualBox.classList.remove('hidden');
             lazimBox.classList.add('hidden');
             optionsBox.classList.remove('hidden');
@@ -387,10 +384,12 @@
                 titleElement.innerText = "Tambah Beginner";
                 titleElement.className = "font-black text-xl text-teal-600";
                 subElement.innerText = "Kira Gambar 1 Digit";
+                document.getElementById('exercise-operator').innerText = "+";
             } else if(mode === 'tambah-2') {
                 titleElement.innerText = "Tambah Advanced";
                 titleElement.className = "font-black text-xl text-pink-600";
                 subElement.innerText = "Kira Gambar 2 Digit";
+                document.getElementById('exercise-operator').innerText = "+";
             } else if(mode === 'tambah-lazim') {
                 titleElement.innerText = "Bentuk Lazim 2 Digit";
                 titleElement.className = "font-black text-xl text-indigo-600";
@@ -398,11 +397,11 @@
                 visualBox.classList.add('hidden');
                 optionsBox.classList.add('hidden'); 
                 lazimBox.classList.remove('hidden');
-                keyboardBox.classList.remove('hidden'); // Paparkan pad nombor pintar
+                keyboardBox.classList.remove('hidden');
             } else {
                 titleElement.innerText = "Latihan Sifir";
                 titleElement.className = "font-black text-xl text-orange-600";
-                subElement.innerText = "Kira Kumpulan Gambar Sifir";
+                subElement.innerText = "Sifir 2 hingga 11 (1-12)";
                 document.getElementById('exercise-operator').innerText = "×";
             }
 
@@ -415,19 +414,29 @@
             let num1 = 0; let num2 = 0; let correctResult = 0;
             const randomEmoji = emojiList[Math.floor(Math.random() * emojiList.length)];
 
+            const part1Container = document.getElementById('visual-part-1');
+            const part2Container = document.getElementById('visual-part-2');
+            part1Container.innerHTML = ''; part2Container.innerHTML = '';
+
             if(currentMode === 'tambah-1') {
                 num1 = Math.floor(Math.random() * 9) + 1;
                 num2 = Math.floor(Math.random() * 9) + 1;
                 correctResult = num1 + num2;
                 document.getElementById('exercise-text-question').innerText = `${num1} + ${num2} = ?`;
+                
+                for(let i = 0; i < num1; i++) part1Container.innerHTML += `<span>${randomEmoji}</span>`;
+                for(let i = 0; i < num2; i++) part2Container.innerHTML += `<span>${randomEmoji}</span>`;
+                
             } else if(currentMode === 'tambah-2') {
-                // Logik diubah untuk menetapkan nilai maksimum (10 + 10 = 20)
                 num1 = Math.floor(Math.random() * 10) + 1;
                 num2 = Math.floor(Math.random() * 10) + 1;
                 correctResult = num1 + num2;
                 document.getElementById('exercise-text-question').innerText = `${num1} + ${num2} = ?`;
+                
+                for(let i = 0; i < num1; i++) part1Container.innerHTML += `<span>${randomEmoji}</span>`;
+                for(let i = 0; i < num2; i++) part2Container.innerHTML += `<span>${randomEmoji}</span>`;
+                
             } else if(currentMode === 'tambah-lazim') {
-                // Pilih soalan rawak (10-49)
                 num1 = Math.floor(Math.random() * 39) + 10;
                 num2 = Math.floor(Math.random() * 39) + 10;
                 correctResult = num1 + num2;
@@ -442,30 +451,24 @@
                 document.getElementById('l-num2-p').innerText = n2_puluh;
                 document.getElementById('l-num2-s').innerText = n2_sa;
 
-                // Reset nilai data input manual murid
                 manualData = { carryPuluh: "", ansPuluh: "", ansSa: "" };
-                
-                // Kemas kini visual awal petak bentuk lazim
                 renderBoxValues();
-                
-                // Fokus automatik pada kotak Sa dahulu (kebiasaan mula mengira matematik)
                 setActiveInput('ans-sa');
             } else {
-                num1 = Math.floor(Math.random() * 11) + 2; 
+                // Sifir 2 hingga 11 rawak
+                num1 = Math.floor(Math.random() * 10) + 2; 
+                // Pendarab dari 1 hingga 12 rawak
                 num2 = Math.floor(Math.random() * 12) + 1; 
                 correctResult = num1 * num2;
                 document.getElementById('exercise-text-question').innerText = `${num1} × ${num2} = ?`;
+                
+                part1Container.innerHTML = '';
+                part2Container.innerHTML = '';
             }
 
             currentQuestion = { num1, num2, correct: correctResult };
 
             if(currentMode !== 'tambah-lazim') {
-                const part1Container = document.getElementById('visual-part-1');
-                const part2Container = document.getElementById('visual-part-2');
-                part1Container.innerHTML = ''; part2Container.innerHTML = '';
-                for(let i = 0; i < num1; i++) part1Container.innerHTML += `<span>${randomEmoji}</span>`;
-                for(let i = 0; i < num2; i++) part2Container.innerHTML += `<span>${randomEmoji}</span>`;
-
                 let options = new Set();
                 options.add(correctResult);
                 while(options.size < 4) {
@@ -488,22 +491,17 @@
             }
         }
 
-        // Fungsi untuk menguruskan pemilihan petak aktif yang ingin diisi
         function setActiveInput(targetId) {
             activeInputTarget = targetId;
-            
-            // Buang semua kelas aktif lama
             document.getElementById('box-carry-puluh').classList.remove('active-input');
             document.getElementById('box-ans-puluh').classList.remove('active-input');
             document.getElementById('box-ans-sa').classList.remove('active-input');
 
-            // Tambah highlight biru pada petak pilihan semasa murid
             if(targetId === 'carry-puluh') document.getElementById('box-carry-puluh').classList.add('active-input');
             if(targetId === 'ans-puluh') document.getElementById('box-ans-puluh').classList.add('active-input');
             if(targetId === 'ans-sa') document.getElementById('box-ans-sa').classList.add('active-input');
         }
 
-        // Dipanggil apabila butang pad nombor 0-9 ditekan
         function pressNumber(num) {
             if(activeInputTarget === 'carry-puluh') {
                 manualData.carryPuluh = num.toString();
@@ -515,7 +513,6 @@
             renderBoxValues();
         }
 
-        // Butang padam nilai pada petak aktif
         function pressClear() {
             if(activeInputTarget === 'carry-puluh') manualData.carryPuluh = "";
             if(activeInputTarget === 'ans-puluh') manualData.ansPuluh = "";
@@ -523,7 +520,6 @@
             renderBoxValues();
         }
 
-        // Kemas kini paparan teks/nombor dalam komponen bentuk lazim
         function renderBoxValues() {
             const bCarry = document.getElementById('box-carry-puluh');
             const bPuluh = document.getElementById('box-ans-puluh');
@@ -547,11 +543,9 @@
                 bSa.className = "lazim-box bg-slate-100 border-2 border-slate-300 text-slate-400 font-black";
             }
             
-            // Mengekalkan status border highlight biru menyala
             setActiveInput(activeInputTarget);
         }
 
-        // Menyemak keseluruhan jawapan bentuk lazim manual pilihan murid
         function checkManualLazimAnswer() {
             if(manualData.ansSa === "" || manualData.ansPuluh === "") {
                 alert("Sila isi petak jawapan Sa dan Puluh terlebih dahulu!");
