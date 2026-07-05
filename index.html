@@ -87,10 +87,10 @@
                     <span class="absolute -right-4 -bottom-4 text-7xl opacity-20">🎯</span>
                 </div>
 
-                <!-- Menu Grid Utama (Hanya Kuiz & Statistik) -->
+                <!-- Menu Grid Utama (Hanya Latihan Sifir & Statistik) -->
                 <div class="grid grid-cols-2 gap-4">
                     <button onclick="changeScreen('quiz')" class="p-4 bg-orange-500 text-white rounded-[20px] shadow-md border-b-4 border-orange-700 font-black text-lg flex flex-col items-center gap-2 bounce-hover col-span-1">
-                        <span class="text-3xl bg-white/20 p-2 rounded-full material-icons">quiz</span> Kuiz Rawak
+                        <span class="text-3xl bg-white/20 p-2 rounded-full material-icons">edit</span> Latihan Sifir
                     </button>
                     <button onclick="changeScreen('stats')" class="p-4 bg-emerald-500 text-white rounded-[20px] shadow-md border-b-4 border-emerald-700 font-black text-lg flex flex-col items-center gap-2 bounce-hover col-span-1">
                         <span class="text-3xl bg-white/20 p-2 rounded-full material-icons">bar_chart</span> Statistik
@@ -107,11 +107,11 @@
                 </div>
             </section>
 
-            <!-- 3. HALAMAN KUIZ -->
+            <!-- 3. HALAMAN LATIHAN SIFIR -->
             <section id="screen-quiz" class="hidden space-y-4">
                 <div class="flex justify-between items-center">
                     <button onclick="changeScreen('home')" class="bg-slate-200 p-2 rounded-full flex items-center"><span class="material-icons">arrow_back</span></button>
-                    <h3 class="font-black text-xl text-orange-600">Kuiz Pintar</h3>
+                    <h3 class="font-black text-xl text-orange-600">Latihan Sifir</h3>
                     <div class="w-8"></div>
                 </div>
 
@@ -165,7 +165,7 @@
                 <span class="material-icons text-2xl">home</span> Utama
             </button>
             <button onclick="changeScreen('quiz')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-blue-500 font-bold text-xs">
-                <span class="material-icons text-2xl">quiz</span> Kuiz
+                <span class="material-icons text-2xl">edit</span> Latihan
             </button>
             <button onclick="changeScreen('stats')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-blue-500 font-bold text-xs">
                 <span class="material-icons text-2xl">bar_chart</span> Grafik
@@ -222,7 +222,7 @@
             }
         }
 
-        // 3. Janakan Soalan Kuiz Rawak Matematik
+        // 3. Janakan Soalan Latihan Rawak Matematik
         function generateNewQuestion() {
             document.getElementById('quiz-feedback').classList.add('hidden');
             
@@ -256,7 +256,7 @@
             });
         }
 
-        // 4. Periksa Jawapan Kuiz Pintar
+        // 4. Periksa Jawapan Latihan Sifir
         function checkQuizAnswer(chosen) {
             player.totalAnswers++;
             const feedback = document.getElementById('quiz-feedback');
