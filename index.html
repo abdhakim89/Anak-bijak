@@ -44,6 +44,14 @@
             background: rgba(255, 255, 255, 0.6);
             border-radius: 12px;
         }
+        /* Gaya khusus untuk susunan Bentuk Lazim */
+        .standard-form {
+            font-family: monospace;
+            font-size: 2.5rem;
+            line-height: 1.2;
+            display: inline-block;
+            text-align: right;
+        }
     </style>
 </head>
 <body class="p-2 sm:p-4 text-slate-800">
@@ -111,43 +119,43 @@
                         <span class="text-3xl bg-white/20 p-2 rounded-full material-icons">bar_chart</span> Lihat Statistik Pencapaian
                     </button>
                 </div>
-
-                <div class="bg-white p-4 rounded-[20px] border border-slate-100 shadow-sm">
-                    <h4 class="font-black text-slate-700 text-sm mb-2 flex items-center gap-1"><span class="text-amber-500 material-icons">military_tech</span> Koleksi Badge Saya</h4>
-                    <div class="flex gap-2 overflow-x-auto py-1" id="home-badges-list">
-                        <span class="bg-slate-100 text-slate-400 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap">🔒 Sifir Master</span>
-                        <span class="bg-slate-100 text-slate-400 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap">🔒 Hero Tambah</span>
-                    </div>
-                </div>
             </section>
 
             <!-- 2B. SUB-HALAMAN: PILIHAN TAHAP TAMBAH -->
-            <section id="screen-sub-tambah" class="hidden space-y-5">
+            <section id="screen-sub-tambah" class="hidden space-y-4">
                 <div class="flex items-center gap-3">
                     <button onclick="changeScreen('home')" class="bg-slate-200 p-2 rounded-full flex items-center"><span class="material-icons">arrow_back</span></button>
                     <h3 class="font-black text-xl text-pink-600">Pilih Tahap Tambah</h3>
                 </div>
 
-                <div class="space-y-4 pt-2">
-                    <button onclick="openExercise('tambah-1')" class="w-full p-5 bg-gradient-to-r from-teal-400 to-emerald-500 text-white rounded-2xl shadow-md border-b-4 border-emerald-700 text-left flex items-center justify-between bounce-hover">
+                <div class="space-y-3 pt-1">
+                    <button onclick="openExercise('tambah-1')" class="w-full p-4 bg-gradient-to-r from-teal-400 to-emerald-500 text-white rounded-2xl shadow-md border-b-4 border-emerald-700 text-left flex items-center justify-between bounce-hover">
                         <div>
-                            <div class="font-black text-xl">🟢 Beginner</div>
-                            <div class="text-xs text-emerald-100 font-bold mt-1">Tambah 1 Digit Bergambar (1-9)</div>
+                            <div class="font-black text-lg">🟢 Beginner</div>
+                            <div class="text-xs text-emerald-100 font-bold mt-0.5">Tambah 1 Digit Bergambar (1-9)</div>
                         </div>
-                        <span class="material-icons text-3xl">child_care</span>
+                        <span class="material-icons text-2xl">child_care</span>
                     </button>
 
-                    <button onclick="openExercise('tambah-2')" class="w-full p-5 bg-gradient-to-r from-pink-400 to-rose-500 text-white rounded-2xl shadow-md border-b-4 border-rose-700 text-left flex items-center justify-between bounce-hover">
+                    <button onclick="openExercise('tambah-2')" class="w-full p-4 bg-gradient-to-r from-pink-400 to-rose-500 text-white rounded-2xl shadow-md border-b-4 border-rose-700 text-left flex items-center justify-between bounce-hover">
                         <div>
-                            <div class="font-black text-xl">🔥 Advanced</div>
-                            <div class="text-xs text-rose-100 font-bold mt-1">Tambah 2 Digit Bergambar (Maks 40)</div>
+                            <div class="font-black text-lg">🔥 Advanced</div>
+                            <div class="text-xs text-rose-100 font-bold mt-0.5">Tambah 2 Digit Bergambar (Maks 40)</div>
                         </div>
-                        <span class="material-icons text-3xl">insights</span>
+                        <span class="material-icons text-2xl">insights</span>
+                    </button>
+
+                    <button onclick="openExercise('tambah-lazim')" class="w-full p-4 bg-gradient-to-r from-indigo-400 to-purple-500 text-white rounded-2xl shadow-md border-b-4 border-purple-700 text-left flex items-center justify-between bounce-hover">
+                        <div>
+                            <div class="font-black text-lg">📝 Bentuk Lazim</div>
+                            <div class="text-xs text-indigo-100 font-bold mt-0.5">Operasi Tambah Menegak (2 Digit)</div>
+                        </div>
+                        <span class="material-icons text-2xl">format_align_right</span>
                     </button>
                 </div>
             </section>
 
-            <!-- 3. HALAMAN LATIHAN (KUIZ GAMBAR) -->
+            <!-- 3. HALAMAN LATIHAN (DINAMIK GAMBAR / BENTUK LAZIM) -->
             <section id="screen-exercise" class="hidden space-y-4">
                 <div class="flex justify-between items-center">
                     <button onclick="goBackFromExercise()" class="bg-slate-200 p-2 rounded-full flex items-center"><span class="material-icons">arrow_back</span></button>
@@ -155,18 +163,32 @@
                     <div class="w-8"></div>
                 </div>
 
-                <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl space-y-3 text-center shadow-inner">
-                    <span class="text-xs font-bold text-amber-700 uppercase tracking-wider block" id="exercise-subtitle">Kira Gambar Di Bawah</span>
+                <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl space-y-3 text-center shadow-inner flex flex-col items-center justify-center">
+                    <span class="text-xs font-bold text-amber-700 uppercase tracking-wider block self-stretch" id="exercise-subtitle">Kira Selesaikan Soalan</span>
                     
-                    <div id="visual-part-1" class="emoji-container text-xl"></div>
-                    <div class="text-2xl font-black text-purple-600 my-1" id="exercise-operator">+</div>
-                    <div id="visual-part-2" class="emoji-container text-xl"></div>
+                    <!-- KONTEN BERGAMBAR (Untuk Sifir & Tambah Bergambar) -->
+                    <div id="container-visual-mode" class="w-full space-y-2">
+                        <div id="visual-part-1" class="emoji-container text-xl"></div>
+                        <div class="text-2xl font-black text-purple-600 my-1" id="exercise-operator">+</div>
+                        <div id="visual-part-2" class="emoji-container text-xl"></div>
+                    </div>
+
+                    <!-- KONTEN BENTUK LAZIM (Untuk Tambah Menegak) -->
+                    <div id="container-lazim-mode" class="hidden py-4 px-8 bg-white border-2 border-slate-200 rounded-xl shadow-sm">
+                        <div class="standard-form font-mono font-black tracking-widest text-slate-700">
+                            <div id="lazim-num1">25</div>
+                            <div class="border-b-4 border-slate-800 pb-1">+ <span id="lazim-num2">14</span></div>
+                            <div class="text-slate-300 pt-1">??</div>
+                        </div>
+                    </div>
                     
-                    <div class="text-2xl font-black text-slate-700 mt-2 pt-2 border-t border-dashed border-amber-200" id="exercise-text-question">
+                    <!-- Teks Soalan Mendatar -->
+                    <div class="text-2xl font-black text-slate-700 mt-2 pt-2 border-t border-dashed border-amber-200 w-full" id="exercise-text-question">
                         ? + ? = ?
                     </div>
                 </div>
 
+                <!-- Pilihan Jawapan -->
                 <div class="grid grid-cols-2 gap-3" id="exercise-options">
                     <!-- Jawapan dijana di sini -->
                 </div>
@@ -206,7 +228,7 @@
 
         </main>
 
-        <!-- FOOTER / MENU NAVIGASI BAWAH -->
+        <!-- FOOTER -->
         <footer id="app-footer" class="hidden bg-white border-t border-slate-100 p-2 flex justify-around items-center rounded-t-[25px] shadow-inner">
             <button onclick="changeScreen('home')" class="flex flex-col items-center gap-0.5 text-blue-500 font-bold text-xs">
                 <span class="material-icons text-2xl">home</span> Utama
@@ -242,23 +264,17 @@
         function loginAsGuest() {
             const inputName = document.getElementById('login-name').value.trim();
             if(inputName) player.name = inputName;
-            
             document.getElementById('header-username').innerText = player.name;
             document.getElementById('app-header').classList.remove('hidden');
             document.getElementById('app-footer').classList.remove('hidden');
-            
             changeScreen('home');
         }
 
         function changeScreen(screenId) {
             const screens = ['screen-login', 'screen-home', 'screen-sub-tambah', 'screen-exercise', 'screen-stats'];
             screens.forEach(s => document.getElementById(s).classList.add('hidden'));
-            
             document.getElementById(`screen-${screenId}`).classList.remove('hidden');
-
-            if(screenId === 'stats') {
-                updateStatsUI();
-            }
+            if(screenId === 'stats') updateStatsUI();
         }
 
         function goBackFromExercise() {
@@ -273,23 +289,32 @@
             currentMode = mode;
             const titleElement = document.getElementById('exercise-title');
             const subElement = document.getElementById('exercise-subtitle');
-            const opElement = document.getElementById('exercise-operator');
+            const visualBox = document.getElementById('container-visual-mode');
+            const lazimBox = document.getElementById('container-lazim-mode');
+
+            // Set default paparan konten hiasan
+            visualBox.classList.remove('hidden');
+            lazimBox.classList.add('hidden');
 
             if(mode === 'tambah-1') {
                 titleElement.innerText = "Tambah Beginner";
                 titleElement.className = "font-black text-xl text-teal-600";
                 subElement.innerText = "Kira Gambar 1 Digit";
-                opElement.innerText = "+";
             } else if(mode === 'tambah-2') {
                 titleElement.innerText = "Tambah Advanced";
                 titleElement.className = "font-black text-xl text-pink-600";
                 subElement.innerText = "Kira Gambar 2 Digit";
-                opElement.innerText = "+";
+            } else if(mode === 'tambah-lazim') {
+                titleElement.innerText = "Bentuk Lazim";
+                titleElement.className = "font-black text-xl text-indigo-600";
+                subElement.innerText = "Selesaikan Kiraan Menegak";
+                visualBox.classList.add('hidden');
+                lazimBox.classList.remove('hidden');
             } else {
                 titleElement.innerText = "Latihan Sifir";
                 titleElement.className = "font-black text-xl text-orange-600";
                 subElement.innerText = "Kira Kumpulan Gambar Sifir";
-                opElement.innerText = "×";
+                document.getElementById('exercise-operator').innerText = "×";
             }
 
             changeScreen('exercise');
@@ -305,19 +330,26 @@
             const randomEmoji = emojiList[Math.floor(Math.random() * emojiList.length)];
 
             if(currentMode === 'tambah-1') {
-                // Beginner: 1 Digit Bergambar (1 hingga 9)
                 num1 = Math.floor(Math.random() * 9) + 1;
                 num2 = Math.floor(Math.random() * 9) + 1;
                 correctResult = num1 + num2;
                 document.getElementById('exercise-text-question').innerText = `${num1} + ${num2} = ?`;
             } else if(currentMode === 'tambah-2') {
-                // Advanced: 2 Digit Bergambar up to 40
                 num1 = Math.floor(Math.random() * 20) + 1;
                 num2 = Math.floor(Math.random() * 20) + 1;
                 correctResult = num1 + num2;
                 document.getElementById('exercise-text-question').innerText = `${num1} + ${num2} = ?`;
+            } else if(currentMode === 'tambah-lazim') {
+                // Bentuk Lazim 2 Digit (cth: 10 hingga 49)
+                num1 = Math.floor(Math.random() * 40) + 10;
+                num2 = Math.floor(Math.random() * 40) + 10;
+                correctResult = num1 + num2;
+                
+                // Kemas kini komponen bentuk lazim
+                document.getElementById('lazim-num1').innerText = num1;
+                document.getElementById('lazim-num2').innerText = num2;
+                document.getElementById('exercise-text-question').innerText = "Berapakah jumlah jawapannya?";
             } else {
-                // Latihan Sifir
                 num1 = Math.floor(Math.random() * 11) + 2; 
                 num2 = Math.floor(Math.random() * 12) + 1; 
                 correctResult = num1 * num2;
@@ -326,14 +358,15 @@
 
             currentQuestion = { num1, num2, correct: correctResult };
 
-            const part1Container = document.getElementById('visual-part-1');
-            const part2Container = document.getElementById('visual-part-2');
-            
-            part1Container.innerHTML = '';
-            part2Container.innerHTML = '';
-
-            for(let i = 0; i < num1; i++) part1Container.innerHTML += `<span>${randomEmoji}</span>`;
-            for(let i = 0; i < num2; i++) part2Container.innerHTML += `<span>${randomEmoji}</span>`;
+            // Render komponen visual emoji jika bukan bentuk lazim
+            if(currentMode !== 'tambah-lazim') {
+                const part1Container = document.getElementById('visual-part-1');
+                const part2Container = document.getElementById('visual-part-2');
+                part1Container.innerHTML = '';
+                part2Container.innerHTML = '';
+                for(let i = 0; i < num1; i++) part1Container.innerHTML += `<span>${randomEmoji}</span>`;
+                for(let i = 0; i < num2; i++) part2Container.innerHTML += `<span>${randomEmoji}</span>`;
+            }
 
             // Janakan pilihan jawapan (1 betul, 3 salah)
             let options = new Set();
@@ -341,7 +374,7 @@
             while(options.size < 4) {
                 let deviation = (Math.floor(Math.random() * 4) + 1) * (Math.random() < 0.5 ? 1 : -1);
                 let fake = correctResult + deviation;
-                if(fake > 0 && fake !== correctResult && fake <= 150) {
+                if(fake > 0 && fake !== correctResult && fake <= 200) {
                     options.add(fake);
                 }
             }
