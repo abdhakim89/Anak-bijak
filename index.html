@@ -401,7 +401,7 @@
             } else {
                 titleElement.innerText = "Latihan Sifir";
                 titleElement.className = "font-black text-xl text-orange-600";
-                subElement.innerText = "Sifir 2 hingga 11 (1-12)";
+                subElement.innerText = ""; // Membuang tulisan pembantu/sari kata untuk sifir sepenuhnya
                 document.getElementById('exercise-operator').innerText = "×";
             }
 
@@ -455,9 +455,7 @@
                 renderBoxValues();
                 setActiveInput('ans-sa');
             } else {
-                // Sifir 2 hingga 11 rawak
                 num1 = Math.floor(Math.random() * 10) + 2; 
-                // Pendarab dari 1 hingga 12 rawak
                 num2 = Math.floor(Math.random() * 12) + 1; 
                 correctResult = num1 * num2;
                 document.getElementById('exercise-text-question').innerText = `${num1} × ${num2} = ?`;
