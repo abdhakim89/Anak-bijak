@@ -9,7 +9,7 @@
     <!-- Google Fonts: Nunito & Material Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Material+Icons&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght=400;600;700;800;900&family=Material+Icons&display=swap" rel="stylesheet">
     <!-- Canvas Confetti untuk kesan ganjaran kemenangan -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -34,15 +34,24 @@
             animation: float 4s ease-in-out infinite;
         }
         .emoji-container {
-            max-height: 110px;
+            max-height: 160px;
             overflow-y: auto;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 2px;
-            padding: 4px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 12px;
+            gap: 8px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 16px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .emoji-item {
+            display: inline-block;
+            transition: transform 0.2s;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+        }
+        .emoji-item:hover {
+            transform: scale(1.25) rotate(5deg);
         }
         /* Gaya khusus reka bentuk Bentuk Lazim */
         .lazim-table {
@@ -166,7 +175,7 @@
                     <button onclick="openExercise('tambah-2')" class="w-full p-4 bg-gradient-to-r from-pink-400 to-rose-500 text-white rounded-2xl shadow-md border-b-4 border-rose-700 text-left flex items-center justify-between bounce-hover">
                         <div>
                             <div class="font-black text-lg">🔥 Advanced</div>
-                            <div class="text-xs text-rose-100 font-bold mt-0.5">Tambah 2 Digit Bergambar (Maks 40)</div>
+                            <div class="text-xs text-rose-100 font-bold mt-0.5">Tambah Bergambar Menarik (Maks 20)</div>
                         </div>
                         <span class="material-icons text-2xl">insights</span>
                     </button>
@@ -194,11 +203,11 @@
                     
                     <!-- KONTEN BERGAMBAR (Pilihan Objektif) -->
                     <div id="container-visual-mode" class="w-full space-y-2">
-                        <div id="visual-part-1" class="emoji-container text-xl"></div>
-                        <div class="text-2xl font-black text-purple-600 my-1" id="exercise-operator">+</div>
-                        <div id="visual-part-2" class="emoji-container text-xl"></div>
+                        <div id="visual-part-1" class="emoji-container"></div>
+                        <div class="text-3xl font-black text-purple-600 my-1 animate-pulse" id="exercise-operator">+</div>
+                        <div id="visual-part-2" class="emoji-container"></div>
                         
-                        <div class="text-2xl font-black text-slate-700 mt-2 pt-2 border-t border-dashed border-amber-200 w-full" id="exercise-text-question">
+                        <div class="text-3xl font-black text-slate-700 mt-2 pt-2 border-t border-dashed border-amber-200 w-full tracking-wide" id="exercise-text-question">
                             ? + ? = ?
                         </div>
                     </div>
@@ -341,7 +350,8 @@
             ansSa: ""
         };
 
-        const emojiList = ['🍎', '🍓', '🎈', '⭐', '🚗', '🐱', '🦖', '🍬', '🍩', '🚀', '🐝', '🐼', '🌻', '⚽'];
+        // Senarai Emoji yang terang, besar, dan digemari kanak-kanak
+        const emojiList = ['🍎', '🍓', '🎈', '⭐', '🚗', '🐱', '🦖', '🍬', '🍩', '🚀', '🐝', '🐼', '🌻', '⚽', '🍦', '🦁', '🦊', '🎨'];
 
         function loginAsGuest() {
             const inputName = document.getElementById('login-name').value.trim();
@@ -385,11 +395,11 @@
             if(mode === 'tambah-1') {
                 titleElement.innerText = "Tambah Beginner";
                 titleElement.className = "font-black text-xl text-teal-600";
-                subElement.innerText = "Kira Gambar 1 Digit";
+                subElement.innerText = "Kira Gambar 1 Digit (Maks 10)";
             } else if(mode === 'tambah-2') {
                 titleElement.innerText = "Tambah Advanced";
                 titleElement.className = "font-black text-xl text-pink-600";
-                subElement.innerText = "Kira Gambar 2 Digit";
+                subElement.innerText = "Kira Gambar Besar & Menarik (Maks 20)";
             } else if(mode === 'tambah-lazim') {
                 titleElement.innerText = "Bentuk Lazim 2 Digit";
                 titleElement.className = "font-black text-xl text-indigo-600";
@@ -397,7 +407,7 @@
                 visualBox.classList.add('hidden');
                 optionsBox.classList.add('hidden'); 
                 lazimBox.classList.remove('hidden');
-                keyboardBox.classList.remove('hidden'); // Paparkan pad nombor pintar
+                keyboardBox.classList.remove('hidden'); 
             } else {
                 titleElement.innerText = "Latihan Sifir";
                 titleElement.className = "font-black text-xl text-orange-600";
@@ -414,18 +424,23 @@
             let num1 = 0; let num2 = 0; let correctResult = 0;
             const randomEmoji = emojiList[Math.floor(Math.random() * emojiList.length)];
 
+            // Tetapkan saiz emoji berdasarkan mod
+            let emojiSizeClass = "text-3xl"; // Default
+
             if(currentMode === 'tambah-1') {
-                num1 = Math.floor(Math.random() * 9) + 1;
-                num2 = Math.floor(Math.random() * 9) + 1;
-                correctResult = num1 + num2;
+                num1 = Math.floor(Math.random() * 5) + 1; // 1 hingga 5
+                num2 = Math.floor(Math.random() * 4) + 1; // 1 hingga 4
+                correctResult = num1 + num2; // Maksimum 9 atau 10
+                emojiSizeClass = "text-4xl"; 
                 document.getElementById('exercise-text-question').innerText = `${num1} + ${num2} = ?`;
             } else if(currentMode === 'tambah-2') {
-                num1 = Math.floor(Math.random() * 20) + 1;
-                num2 = Math.floor(Math.random() * 20) + 1;
-                correctResult = num1 + num2;
+                // Diubah suai supaya HAD MAKSIMUM JAWAPAN ialah 20 dan gambar bersaiz BESAR Gergasi (text-5xl)
+                num1 = Math.floor(Math.random() * 10) + 1; // 1 hingga 10
+                num2 = Math.floor(Math.random() * 10) + 1; // 1 hingga 10
+                correctResult = num1 + num2; // Maksimum 20
+                emojiSizeClass = "text-5xl font-extrabold m-1"; 
                 document.getElementById('exercise-text-question').innerText = `${num1} + ${num2} = ?`;
             } else if(currentMode === 'tambah-lazim') {
-                // Pilih soalan rawak (10-49)
                 num1 = Math.floor(Math.random() * 39) + 10;
                 num2 = Math.floor(Math.random() * 39) + 10;
                 correctResult = num1 + num2;
@@ -440,18 +455,14 @@
                 document.getElementById('l-num2-p').innerText = n2_puluh;
                 document.getElementById('l-num2-s').innerText = n2_sa;
 
-                // Reset nilai data input manual murid
                 manualData = { carryPuluh: "", ansPuluh: "", ansSa: "" };
-                
-                // Kemas kini visual awal petak bentuk lazim
                 renderBoxValues();
-                
-                // Fokus automatik pada kotak Sa dahulu (kebiasaan mula mengira matematik)
                 setActiveInput('ans-sa');
             } else {
-                num1 = Math.floor(Math.random() * 11) + 2; 
-                num2 = Math.floor(Math.random() * 12) + 1; 
+                num1 = Math.floor(Math.random() * 8) + 2; 
+                num2 = Math.floor(Math.random() * 5) + 1; 
                 correctResult = num1 * num2;
+                emojiSizeClass = "text-2xl";
                 document.getElementById('exercise-text-question').innerText = `${num1} × ${num2} = ?`;
             }
 
@@ -461,15 +472,17 @@
                 const part1Container = document.getElementById('visual-part-1');
                 const part2Container = document.getElementById('visual-part-2');
                 part1Container.innerHTML = ''; part2Container.innerHTML = '';
-                for(let i = 0; i < num1; i++) part1Container.innerHTML += `<span>${randomEmoji}</span>`;
-                for(let i = 0; i < num2; i++) part2Container.innerHTML += `<span>${randomEmoji}</span>`;
+                
+                // Janakan susunan emoji tersusun dengan suntikan kelas saiz & bayang-bayang menarik
+                for(let i = 0; i < num1; i++) part1Container.innerHTML += `<span class="emoji-item ${emojiSizeClass}">${randomEmoji}</span>`;
+                for(let i = 0; i < num2; i++) part2Container.innerHTML += `<span class="emoji-item ${emojiSizeClass}">${randomEmoji}</span>`;
 
                 let options = new Set();
                 options.add(correctResult);
                 while(options.size < 4) {
-                    let deviation = (Math.floor(Math.random() * 4) + 1) * (Math.random() < 0.5 ? 1 : -1);
+                    let deviation = (Math.floor(Math.random() * 3) + 1) * (Math.random() < 0.5 ? 1 : -1);
                     let fake = correctResult + deviation;
-                    if(fake > 0 && fake !== correctResult && fake <= 200) options.add(fake);
+                    if(fake > 0 && fake !== correctResult && fake <= 100) options.add(fake);
                 }
 
                 const optionsArray = Array.from(options).sort(() => Math.random() - 0.5);
@@ -486,22 +499,17 @@
             }
         }
 
-        // Fungsi untuk menguruskan pemilihan petak aktif yang ingin diisi
         function setActiveInput(targetId) {
             activeInputTarget = targetId;
-            
-            // Buang semua kelas aktif lama
             document.getElementById('box-carry-puluh').classList.remove('active-input');
             document.getElementById('box-ans-puluh').classList.remove('active-input');
             document.getElementById('box-ans-sa').classList.remove('active-input');
 
-            // Tambah highlight biru pada petak pilihan semasa murid
             if(targetId === 'carry-puluh') document.getElementById('box-carry-puluh').classList.add('active-input');
             if(targetId === 'ans-puluh') document.getElementById('box-ans-puluh').classList.add('active-input');
             if(targetId === 'ans-sa') document.getElementById('box-ans-sa').classList.add('active-input');
         }
 
-        // Dipanggil apabila butang pad nombor 0-9 ditekan
         function pressNumber(num) {
             if(activeInputTarget === 'carry-puluh') {
                 manualData.carryPuluh = num.toString();
@@ -513,7 +521,6 @@
             renderBoxValues();
         }
 
-        // Butang padam nilai pada petak aktif
         function pressClear() {
             if(activeInputTarget === 'carry-puluh') manualData.carryPuluh = "";
             if(activeInputTarget === 'ans-puluh') manualData.ansPuluh = "";
@@ -521,7 +528,6 @@
             renderBoxValues();
         }
 
-        // Kemas kini paparan teks/nombor dalam komponen bentuk lazim
         function renderBoxValues() {
             const bCarry = document.getElementById('box-carry-puluh');
             const bPuluh = document.getElementById('box-ans-puluh');
@@ -544,12 +550,9 @@
                 bSa.innerText = "?";
                 bSa.className = "lazim-box bg-slate-100 border-2 border-slate-300 text-slate-400 font-black";
             }
-            
-            // Mengekalkan status border highlight biru menyala
             setActiveInput(activeInputTarget);
         }
 
-        // Menyemak keseluruhan jawapan bentuk lazim manual pilihan murid
         function checkManualLazimAnswer() {
             if(manualData.ansSa === "" || manualData.ansPuluh === "") {
                 alert("Sila isi petak jawapan Sa dan Puluh terlebih dahulu!");
@@ -557,7 +560,6 @@
             }
 
             const studentTotal = parseInt(manualData.ansPuluh + manualData.ansSa);
-            
             let sa1 = currentQuestion.num1 % 10;
             let sa2 = currentQuestion.num2 % 10;
             let perluCarry = (sa1 + sa2) >= 10;
@@ -590,7 +592,7 @@
                 feedback.classList.remove('hidden');
                 feedback.className = "text-center p-3 rounded-xl font-black text-lg bg-red-100 text-red-700 w-full";
                 feedback.innerText = `❌ Cuba lagi! Jawapan sebenar ialah ${currentQuestion.correct}`;
-                setTimeout(generateQuestion, 2500);
+                setTimeout(generateQuestion, 2200);
             }
         }
 
