@@ -78,6 +78,12 @@
             background-color: #eff6ff !important;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
         }
+        /* Gaya Kad Sifir Gergasi & Glow */
+        .sifir-glow-card {
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            box-shadow: 0 20px 25px -5px rgba(236, 72, 153, 0.3), inset 0 2px 4px rgba(255,255,255,0.4);
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body class="p-2 sm:p-4 text-slate-800">
@@ -182,14 +188,15 @@
             </section>
 
             <!-- 3. HALAMAN LATIHAN -->
-            <section id="screen-exercise" class="hidden space-y-4">
+            <section id="screen-exercise" class="hidden space-y-5">
                 <div class="flex justify-between items-center">
                     <button onclick="goBackFromExercise()" class="bg-slate-200 p-2 rounded-full flex items-center"><span class="material-icons">arrow_back</span></button>
                     <h3 class="font-black text-xl text-orange-600" id="exercise-title">Latihan</h3>
                     <div class="w-8"></div>
                 </div>
 
-                <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl space-y-3 text-center shadow-inner flex flex-col items-center justify-center relative">
+                <!-- KOTAK SOALAN UTAMA -->
+                <div id="exercise-question-box" class="bg-amber-50 border border-amber-200 p-5 rounded-3xl space-y-3 text-center shadow-inner flex flex-col items-center justify-center relative">
                     <span class="text-xs font-bold text-amber-700 uppercase tracking-wider block self-stretch" id="exercise-subtitle">Kira Selesaikan Soalan</span>
                     
                     <!-- KONTEN BERGAMBAR / TEKS SOALAN UTAMA -->
@@ -203,36 +210,30 @@
                         </div>
                     </div>
 
-                    <!-- KONTEN BENTUK LAZIM (Pilihan Nombor Berasingan) -->
+                    <!-- KONTEN BENTUK LAZIM -->
                     <div id="container-lazim-mode" class="hidden py-4 px-6 bg-white border-2 border-slate-200 rounded-2xl shadow-sm w-full max-w-[260px]">
                         <table class="lazim-table mx-auto text-slate-700">
-                            <!-- Baris Atas -->
                             <tr class="text-center">
                                 <td></td>
                                 <td><div id="box-carry-puluh" onclick="setActiveInput('carry-puluh')" class="carry-box border border-dashed border-red-300 bg-red-50/50 font-bold">&nbsp;</div></td>
                                 <td><div id="box-carry-sa" class="carry-box border border-transparent font-bold invisible">&nbsp;</div></td>
                             </tr>
-                            <!-- Nombor Pertama -->
                             <tr>
                                 <td></td>
                                 <td id="l-num1-p" class="text-center px-2">2</td>
                                 <td id="l-num1-s" class="text-center px-2">5</td>
                             </tr>
-                            <!-- Nombor Kedua -->
                             <tr class="border-b-4 border-slate-800">
                                 <td class="text-purple-600 text-xl font-sans pr-2">+</td>
                                 <td id="l-num2-p" class="text-center px-2">1</td>
                                 <td id="l-num2-s" class="text-center px-2">6</td>
                             </tr>
-                            <!-- Ruang Jawapan Murid -->
                             <tr class="pt-2">
                                 <td></td>
                                 <td class="p-1"><div id="box-ans-puluh" onclick="setActiveInput('ans-puluh')" class="lazim-box bg-slate-100 border-2 border-slate-300 text-slate-400 font-black">?</div></td>
                                 <td class="p-1"><div id="box-ans-sa" onclick="setActiveInput('ans-sa')" class="lazim-box bg-slate-100 border-2 border-slate-300 text-slate-400 font-black">?</div></td>
                             </tr>
                         </table>
-
-                        <!-- Butang Semak Jawapan -->
                         <button onclick="checkManualLazimAnswer()" class="mt-4 w-full bg-indigo-600 text-white font-black py-2.5 rounded-xl shadow-md hover:bg-indigo-700 transition-colors">
                             Semak Jawapan 🚀
                         </button>
@@ -240,11 +241,11 @@
                 </div>
 
                 <!-- Pilihan Objektif Grid -->
-                <div class="grid grid-cols-2 gap-3" id="exercise-options">
+                <div class="grid grid-cols-2 gap-4" id="exercise-options">
                     <!-- Jawapan dijana di sini -->
                 </div>
 
-                <!-- PAPAN PILIHAN NOMBOR 0-9 -->
+                <!-- PAPAN PILIHAN NOMBOR BENTUK LAZIM -->
                 <div id="container-keyboard" class="hidden bg-white/90 border border-slate-200 p-3 rounded-2xl shadow-md space-y-2">
                     <p class="text-center text-xs font-bold text-slate-500 mb-1">Klik petak hijau/kelabu di atas, kemudian pilih nombor:</p>
                     <div class="grid grid-cols-5 gap-2">
@@ -341,6 +342,13 @@
         };
 
         const emojiList = ['🍎', '🍓', '🎈', '⭐', '🚗', '🐱', '🦖', '🍬', '🍩', '🚀', '🐝', '🐼', '🌻', '⚽'];
+        // Warna ceria khas untuk pilihan jawapan sifir objektif
+        const optionColors = [
+            'bg-sky-400 border-sky-600 text-white',
+            'bg-emerald-400 border-emerald-600 text-white',
+            'bg-amber-400 border-amber-600 text-white',
+            'bg-rose-400 border-rose-600 text-white'
+        ];
 
         function loginAsGuest() {
             const inputName = document.getElementById('login-name').value.trim();
@@ -370,11 +378,14 @@
             currentMode = mode;
             const titleElement = document.getElementById('exercise-title');
             const subElement = document.getElementById('exercise-subtitle');
+            const questionBox = document.getElementById('exercise-question-box');
             const visualBox = document.getElementById('container-visual-mode');
             const lazimBox = document.getElementById('container-lazim-mode');
             const optionsBox = document.getElementById('exercise-options');
             const keyboardBox = document.getElementById('container-keyboard');
 
+            // Tetapkan semula rupa asas kotak soalan
+            questionBox.className = "bg-amber-50 border border-amber-200 p-5 rounded-3xl space-y-3 text-center shadow-inner flex flex-col items-center justify-center relative";
             visualBox.classList.remove('hidden');
             lazimBox.classList.add('hidden');
             optionsBox.classList.remove('hidden');
@@ -385,13 +396,17 @@
                 titleElement.className = "font-black text-xl text-teal-600";
                 subElement.innerText = "Kira Gambar 1 Digit";
                 subElement.classList.remove('hidden');
+                document.getElementById('exercise-operator').className = "text-2xl font-black text-purple-600 my-1";
                 document.getElementById('exercise-operator').innerText = "+";
+                document.getElementById('exercise-text-question').className = "text-3xl font-black text-slate-700 mt-2 pt-2 border-t border-dashed border-amber-200 w-full";
             } else if(mode === 'tambah-2') {
                 titleElement.innerText = "Tambah Advanced";
                 titleElement.className = "font-black text-xl text-pink-600";
                 subElement.innerText = "Kira Gambar 2 Digit";
                 subElement.classList.remove('hidden');
+                document.getElementById('exercise-operator').className = "text-2xl font-black text-purple-600 my-1";
                 document.getElementById('exercise-operator').innerText = "+";
+                document.getElementById('exercise-text-question').className = "text-3xl font-black text-slate-700 mt-2 pt-2 border-t border-dashed border-amber-200 w-full";
             } else if(mode === 'tambah-lazim') {
                 titleElement.innerText = "Bentuk Lazim 2 Digit";
                 titleElement.className = "font-black text-xl text-indigo-600";
@@ -403,10 +418,17 @@
                 keyboardBox.classList.remove('hidden');
             } else if(mode === 'sifir') {
                 titleElement.innerText = "Latihan Sifir";
-                titleElement.className = "font-black text-xl text-orange-600";
-                subElement.innerText = ""; 
-                subElement.classList.add('hidden'); // Sembunyikan pembantu untuk paparan bersih
-                document.getElementById('exercise-operator').innerText = "×";
+                titleElement.className = "font-black text-xl text-purple-600";
+                
+                // Sembunyikan sub-arahan sepenuhnya demi reka bentuk minimalis & fokus
+                subElement.classList.add('hidden'); 
+                
+                // Tukar reka bentuk kotak soalan menjadi kad neon terapung yang sangat menarik!
+                questionBox.className = "sifir-glow-card p-8 rounded-[32px] text-center flex flex-col items-center justify-center relative border-4 border-white/40 floating-icon";
+                
+                // Reka bentuk teks formula darab premium
+                document.getElementById('exercise-operator').className = "hidden"; // Sembunyikan pembagi tengah
+                document.getElementById('exercise-text-question').className = "text-5xl sm:text-6xl font-black text-white tracking-wide drop-shadow-md";
             }
 
             changeScreen('exercise');
@@ -462,10 +484,9 @@
                 num1 = Math.floor(Math.random() * 10) + 2; // Sifir 2 hingga 11
                 num2 = Math.floor(Math.random() * 12) + 1; // Darab 1 hingga 12
                 correctResult = num1 * num2;
-                document.getElementById('exercise-text-question').innerText = `${num1} × ${num2} = ?`;
                 
-                part1Container.innerHTML = '';
-                part2Container.innerHTML = '';
+                // Paparan teks bersih tanpa gangguan
+                document.getElementById('exercise-text-question').innerText = `${num1} × ${num2} = ?`;
             }
 
             currentQuestion = { num1, num2, correct: correctResult };
@@ -483,9 +504,17 @@
                 const optionsContainer = document.getElementById('exercise-options');
                 optionsContainer.innerHTML = '';
                 
-                optionsArray.forEach(opt => {
+                optionsArray.forEach((opt, index) => {
                     const btn = document.createElement('button');
-                    btn.className = "p-4 bg-white hover:bg-slate-50 border-2 border-slate-200 active:border-blue-500 rounded-xl font-black text-xl text-slate-700 shadow-sm transition-all bounce-hover";
+                    
+                    // Bezakan gaya butang jika mod latihan Sifir (Warna premium gamifikasi)
+                    if(currentMode === 'sifir') {
+                        const colorClass = optionColors[index % optionColors.length];
+                        btn.className = `p-5 ${colorClass} border-b-4 rounded-2xl font-black text-2xl shadow-md transition-all bounce-hover active:translate-y-1`;
+                    } else {
+                        btn.className = "p-4 bg-white hover:bg-slate-50 border-2 border-slate-200 active:border-blue-500 rounded-xl font-black text-xl text-slate-700 shadow-sm transition-all bounce-hover";
+                    }
+                    
                     btn.innerText = opt;
                     btn.onclick = () => checkAnswer(opt);
                     optionsContainer.appendChild(btn);
@@ -494,7 +523,6 @@
         }
 
         function setActiveInput(targetId) {
-            activeInputTarget = targetId;
             document.getElementById('box-carry-puluh').classList.remove('active-input');
             document.getElementById('box-ans-puluh').classList.remove('active-input');
             document.getElementById('box-ans-sa').classList.remove('active-input');
@@ -502,6 +530,7 @@
             if(targetId === 'carry-puluh') document.getElementById('box-carry-puluh').classList.add('active-input');
             if(targetId === 'ans-puluh') document.getElementById('box-ans-puluh').classList.add('active-input');
             if(targetId === 'ans-sa') document.getElementById('box-ans-sa').classList.add('active-input');
+            activeInputTarget = targetId;
         }
 
         function pressNumber(num) {
@@ -588,7 +617,7 @@
                 feedback.classList.remove('hidden');
                 feedback.className = "text-center p-3 rounded-xl font-black text-lg bg-red-100 text-red-700 w-full";
                 feedback.innerText = `❌ Cuba lagi! Jawapan sebenar ialah ${currentQuestion.correct}`;
-                setTimeout(generateQuestion, 2500);
+                setTimeout(generateQuestion, 2200);
             }
         }
 
