@@ -134,7 +134,7 @@
             <section id="screen-home" class="hidden space-y-5">
                 <div class="bg-gradient-to-r from-amber-400 to-orange-400 p-4 rounded-[20px] text-white shadow-md relative overflow-hidden">
                     <h3 class="font-black text-xl">Hari ini kita belajar matematik! 👋</h3>
-                    <p class="text-sm font-semibold text-orange-900 opacity-90 mt-1">Kumpul bintang dan naikkan level kamu!</p>
+                    <p class="text-sm font-semibold text-orange-900 opacity-90 mt-1">Hati-hati, jawapan salah akan mengurangkan XP kamu!</p>
                     <span class="absolute -right-4 -bottom-4 text-7xl opacity-20">🎯</span>
                 </div>
 
@@ -451,7 +451,7 @@
                 lazimBox.classList.remove('hidden');
                 keyboardBox.classList.remove('hidden');
                 document.getElementById('l-operator').innerText = "+";
-                document.getElementById('box-ans-ratus').style.visibility = 'hidden'; // Tambah maks 99 tidak perlukan Ratus
+                document.getElementById('box-ans-ratus').style.visibility = 'hidden'; 
             } else if(mode === 'sifir') {
                 titleElement.innerText = "Latihan Sifir";
                 titleElement.className = "font-black text-xl text-purple-600";
@@ -462,7 +462,7 @@
             } else if(mode === 'sifir-lazim') {
                 titleElement.innerText = "Sifir Bentuk Lazim";
                 titleElement.className = "font-black text-xl text-fuchsia-600";
-                subElement.classList.add('hidden'); // Sembunyikan pembantu untuk paparan bersih
+                subElement.classList.add('hidden'); 
                 visualBox.classList.add('hidden');
                 optionsBox.classList.add('hidden');
                 lazimBox.classList.remove('hidden');
@@ -518,13 +518,13 @@
                 correctResult = num1 * num2;
                 document.getElementById('exercise-text-question').innerText = `${num1} × ${num2} = ?`;
             } else if(currentMode === 'sifir-lazim') {
-                num1 = Math.floor(Math.random() * 89) + 10; // Nombor 2 Digit (10 hingga 98)
-                num2 = Math.floor(Math.random() * 8) + 2;   // Sifir 2 hingga 9
+                num1 = Math.floor(Math.random() * 89) + 10; 
+                num2 = Math.floor(Math.random() * 8) + 2;   
                 correctResult = num1 * num2;
 
                 document.getElementById('l-num1-p').innerText = Math.floor(num1 / 10);
                 document.getElementById('l-num1-s').innerText = num1 % 10;
-                document.getElementById('l-num2-p').innerText = ""; // Kosongkan puluh baris bawah
+                document.getElementById('l-num2-p').innerText = ""; 
                 document.getElementById('l-num2-s').innerText = num2;
 
                 manualData = { carryPuluh: "", ansRatus: "", ansPuluh: "", ansSa: "" };
@@ -630,10 +630,7 @@
             if (studentTotal === currentQuestion.correct) {
                 processCorrectAnswer();
             } else {
-                const feedback = document.getElementById('exercise-feedback');
-                feedback.classList.remove('hidden');
-                feedback.className = "text-center p-3 rounded-xl font-black text-lg bg-red-100 text-red-700 w-full";
-                feedback.innerText = `❌ Kiraan kurang tepat. Jawapan yang betul ialah ${currentQuestion.correct}. Sila cuba lagi!`;
+                processWrongAnswer(`Kiraan salah! Jawapan betul ialah ${currentQuestion.correct}.`);
                 setTimeout(generateQuestion, 2500);
             }
         }
@@ -642,10 +639,7 @@
             if(chosen === currentQuestion.correct) {
                 processCorrectAnswer();
             } else {
-                const feedback = document.getElementById('exercise-feedback');
-                feedback.classList.remove('hidden');
-                feedback.className = "text-center p-3 rounded-xl font-black text-lg bg-red-100 text-red-700 w-full";
-                feedback.innerText = `❌ Cuba lagi! Jawapan sebenar ialah ${currentQuestion.correct}`;
+                processWrongAnswer(`Cuba lagi! Jawapan sebenar ialah ${currentQuestion.correct}.`);
                 setTimeout(generateQuestion, 2200);
             }
         }
@@ -657,17 +651,45 @@
             const feedback = document.getElementById('exercise-feedback');
             feedback.classList.remove('hidden');
             feedback.className = "text-center p-3 rounded-xl font-black text-lg bg-green-100 text-green-700 w-full";
-            feedback.innerText = "🎉 TAHNIAH! Jawapan kamu tepat dan betul! 👍";
+            feedback.innerText = "🎉 TAHNIAH! Jawapan kamu tepat dan betul! 👍 (+20 XP)";
             
-            player.xp += 25; player.stars += 3; player.coins += 5;
+            // Tambah XP dan ganjaran
+            player.xp += 20; 
+            player.stars += 3; 
+            player.coins += 5;
+            
             confetti({ particleCount: 70, spread: 60, origin: { y: 0.7 } });
             
+            // Logik Naik Level
             if(player.xp >= 100) {
                 player.level++;
                 player.xp = player.xp % 100;
             }
             updateHeaderData();
             setTimeout(generateQuestion, 1800);
+        }
+
+        function processWrongAnswer(message) {
+            player.totalAnswers++;
+            
+            const feedback = document.getElementById('exercise-feedback');
+            feedback.classList.remove('hidden');
+            feedback.className = "text-center p-3 rounded-xl font-black text-lg bg-red-100 text-red-700 w-full";
+            feedback.innerText = `❌ ${message} (-10 XP)`;
+            
+            // Tolak XP untuk jawapan salah
+            player.xp -= 10;
+            
+            // Logik Turun Level jika XP jatuh di bawah 0
+            if(player.xp < 0) {
+                if(player.level > 1) {
+                    player.level--;
+                    player.xp = 90; // Beri 90 XP pada tahap bawah untuk elakkan drop terlalu jauh
+                } else {
+                    player.xp = 0; // Kekalkan 0 XP jika masih di Level 1
+                }
+            }
+            updateHeaderData();
         }
 
         function updateHeaderData() {
