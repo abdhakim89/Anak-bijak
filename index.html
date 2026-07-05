@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIJAK SIFIR & TAMBAH - Aplikasi Gamifikasi Premium</title>
+    <title>BIJAK SIFIR, TAMBAH & SUDOKU - Aplikasi Gamifikasi Premium</title>
     <!-- Tailwind CSS untuk UI Premium & Berwarna-warni -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Google Fonts: Nunito & Material Icons -->
@@ -84,6 +84,43 @@
             box-shadow: 0 20px 25px -5px rgba(236, 72, 153, 0.3), inset 0 2px 4px rgba(255,255,255,0.4);
             text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+        /* Gaya Grid Sudoku 4x4 */
+        .sudoku-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            background-color: #1e293b;
+            padding: 6px;
+            border-radius: 16px;
+            width: 240px;
+            margin: 0 auto;
+        }
+        .sudoku-cell {
+            width: 54px;
+            height: 54px;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            font-weight: 900;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        /* Pembahagi Blok 2x2 Sudoku */
+        .sudoku-grid .sudoku-cell:nth-child(2),
+        .sudoku-grid .sudoku-cell:nth-child(6),
+        .sudoku-grid .sudoku-cell:nth-child(10),
+        .sudoku-grid .sudoku-cell:nth-child(14) {
+            margin-right: 4px;
+        }
+        .sudoku-grid .sudoku-cell:nth-child(9),
+        .sudoku-grid .sudoku-cell:nth-child(10),
+        .sudoku-grid .sudoku-cell:nth-child(11),
+        .sudoku-grid .sudoku-cell:nth-child(12) {
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body class="p-2 sm:p-4 text-slate-800">
@@ -114,7 +151,7 @@
             <!-- 1. HALAMAN LOGIN -->
             <section id="screen-login" class="text-center space-y-6 py-6">
                 <div class="space-y-2">
-                    <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-purple-600 to-blue-600 tracking-wider uppercase drop-shadow-sm">Bijak Sifir & Tambah</h1>
+                    <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-purple-600 to-blue-600 tracking-wider uppercase drop-shadow-sm">Bijak Sifir & Sudoku</h1>
                     <p class="text-slate-600 font-bold text-sm bg-orange-100 text-orange-700 py-1 px-3 rounded-full inline-block">Gamifikasi Matematik Seronok! 🚀</p>
                 </div>
                 
@@ -147,6 +184,12 @@
                             <span class="text-3xl bg-white/20 p-2 rounded-full material-icons">edit</span> Latihan Sifir
                         </button>
                     </div>
+                    
+                    <!-- MENU BAHARU: SUDOKU 4x4 -->
+                    <button onclick="changeScreen('sub-sudoku')" class="p-4 bg-purple-600 text-white rounded-[20px] shadow-md border-b-4 border-purple-800 font-black text-lg flex flex-col items-center gap-2 bounce-hover w-full">
+                        <span class="text-3xl bg-white/20 p-2 rounded-full material-icons">grid_on</span> Permainan Sudoku 4x4 🧩
+                    </button>
+
                     <button onclick="changeScreen('stats')" class="p-4 bg-emerald-500 text-white rounded-[20px] shadow-md border-b-4 border-emerald-700 font-black text-lg flex flex-col items-center gap-2 bounce-hover w-full">
                         <span class="text-3xl bg-white/20 p-2 rounded-full material-icons">bar_chart</span> Lihat Statistik Pencapaian
                     </button>
@@ -213,7 +256,31 @@
                 </div>
             </section>
 
-            <!-- 3. HALAMAN LATIHAN -->
+            <!-- 2D. SUB-HALAMAN BAHARU: PILIHAN TAHAP SUDOKU -->
+            <section id="screen-sub-sudoku" class="hidden space-y-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="changeScreen('home')" class="bg-slate-200 p-2 rounded-full flex items-center"><span class="material-icons">arrow_back</span></button>
+                    <h3 class="font-black text-xl text-purple-600">Pilih Tahap Sudoku</h3>
+                </div>
+                <div class="space-y-3 pt-1">
+                    <button onclick="openSudoku('easy')" class="w-full p-4 bg-gradient-to-r from-blue-400 to-sky-500 text-white rounded-2xl shadow-md border-b-4 border-blue-700 text-left flex items-center justify-between bounce-hover">
+                        <div>
+                            <div class="font-black text-lg">🟢 Easy (Mudah)</div>
+                            <div class="text-xs text-blue-100 font-bold mt-0.5">Hanya 4 Petak Kosong diisi!</div>
+                        </div>
+                        <span class="material-icons text-2xl">sentiment_satisfied_alt</span>
+                    </button>
+                    <button onclick="openSudoku('intermediate')" class="w-full p-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl shadow-md border-b-4 border-orange-700 text-left flex items-center justify-between bounce-hover">
+                        <div>
+                            <div class="font-black text-lg">🟠 Intermediate (Sederhana)</div>
+                            <div class="text-xs text-orange-100 font-bold mt-0.5">8 Petak Kosong perlu diisi!</div>
+                        </div>
+                        <span class="material-icons text-2xl">psychology</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 3. HALAMAN LATIHAN MATEMATIK -->
             <section id="screen-exercise" class="hidden space-y-5">
                 <div class="flex justify-between items-center">
                     <button onclick="goBackFromExercise()" class="bg-slate-200 p-2 rounded-full flex items-center"><span class="material-icons">arrow_back</span></button>
@@ -239,28 +306,24 @@
                     <!-- KONTEN BENTUK LAZIM (TAMBAH & SIFIR) -->
                     <div id="container-lazim-mode" class="hidden py-4 px-6 bg-white border-2 border-slate-200 rounded-2xl shadow-sm w-full max-w-[280px]">
                         <table class="lazim-table mx-auto text-slate-700">
-                            <!-- Baris Kumpul Semula (Carry) -->
                             <tr class="text-center text-sm">
                                 <td></td>
                                 <td><div id="box-carry-ratus" class="carry-box border border-transparent font-bold invisible">&nbsp;</div></td>
                                 <td><div id="box-carry-puluh" onclick="setActiveInput('carry-puluh')" class="carry-box border border-dashed border-red-300 bg-red-50/50 font-bold">&nbsp;</div></td>
                                 <td><div id="box-carry-sa" class="carry-box border border-transparent font-bold invisible">&nbsp;</div></td>
                             </tr>
-                            <!-- Nombor Pertama -->
                             <tr>
                                 <td></td>
                                 <td id="l-num1-r" class="text-center px-1 text-slate-300"></td>
                                 <td id="l-num1-p" class="text-center px-1">2</td>
                                 <td id="l-num1-s" class="text-center px-1">5</td>
                             </tr>
-                            <!-- Nombor Kedua & Operator -->
                             <tr class="border-b-4 border-slate-800">
                                 <td id="l-operator" class="text-purple-600 text-xl font-sans pr-1">+</td>
                                 <td></td>
                                 <td id="l-num2-p" class="text-center px-1">1</td>
                                 <td id="l-num2-s" class="text-center px-1">6</td>
                             </tr>
-                            <!-- Ruang Jawapan Murid -->
                             <tr class="pt-2">
                                 <td></td>
                                 <td class="p-0.5"><div id="box-ans-ratus" onclick="setActiveInput('ans-ratus')" class="lazim-box bg-slate-100 border-2 border-slate-300 text-slate-400 font-black">?</div></td>
@@ -275,26 +338,24 @@
                 </div>
 
                 <!-- Pilihan Objektif Grid -->
-                <div class="grid grid-cols-2 gap-4" id="exercise-options">
-                    <!-- Jawapan dijana di sini -->
-                </div>
+                <div class="grid grid-cols-2 gap-4" id="exercise-options"></div>
 
                 <!-- PAPAN PILIHAN NOMBOR BENTUK LAZIM -->
                 <div id="container-keyboard" class="hidden bg-white/90 border border-slate-200 p-3 rounded-2xl shadow-md space-y-2">
                     <p class="text-center text-xs font-bold text-slate-500 mb-1">Klik petak abu-abu di atas, kemudian pilih nombor:</p>
                     <div class="grid grid-cols-5 gap-2">
-                        <button onclick="pressNumber(1)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500 active:scale-95 transition-all">1</button>
-                        <button onclick="pressNumber(2)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500 active:scale-95 transition-all">2</button>
-                        <button onclick="pressNumber(3)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500 active:scale-95 transition-all">3</button>
-                        <button onclick="pressNumber(4)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500 active:scale-95 transition-all">4</button>
-                        <button onclick="pressNumber(5)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500 active:scale-95 transition-all">5</button>
+                        <button onclick="pressNumber(1)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500">1</button>
+                        <button onclick="pressNumber(2)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500">2</button>
+                        <button onclick="pressNumber(3)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500">3</button>
+                        <button onclick="pressNumber(4)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500">4</button>
+                        <button onclick="pressNumber(5)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500">5</button>
                     </div>
                     <div class="grid grid-cols-5 gap-2">
-                        <button onclick="pressNumber(6)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500 active:scale-95 transition-all">6</button>
-                        <button onclick="pressNumber(7)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500 active:scale-95 transition-all">7</button>
-                        <button onclick="pressNumber(8)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500 active:scale-95 transition-all">8</button>
-                        <button onclick="pressNumber(9)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500 active:scale-95 transition-all">9</button>
-                        <button onclick="pressNumber(0)" class="p-3 bg-slate-600 text-white font-black text-xl rounded-xl shadow-sm hover:bg-slate-700 active:scale-95 transition-all">0</button>
+                        <button onclick="pressNumber(6)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500">6</button>
+                        <button onclick="pressNumber(7)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500">7</button>
+                        <button onclick="pressNumber(8)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500">8</button>
+                        <button onclick="pressNumber(9)" class="p-3 bg-amber-400 text-white font-black text-xl rounded-xl shadow-sm hover:bg-amber-500">9</button>
+                        <button onclick="pressNumber(0)" class="p-3 bg-slate-600 text-white font-black text-xl rounded-xl shadow-sm hover:bg-slate-700">0</button>
                     </div>
                     <div class="flex gap-2 pt-1">
                         <button onclick="pressClear()" class="w-full py-2 bg-rose-500 text-white font-black text-sm rounded-lg shadow-sm hover:bg-rose-600 flex items-center justify-center gap-1"><span class="material-icons text-sm">backspace</span> Padam</button>
@@ -302,6 +363,39 @@
                 </div>
 
                 <div id="exercise-feedback" class="hidden text-center p-3 rounded-xl font-black text-lg"></div>
+            </section>
+
+            <!-- 3B. HALAMAN BAHARU: PERMAINAN SUDOKU -->
+            <section id="screen-sudoku-game" class="hidden space-y-4">
+                <div class="flex justify-between items-center">
+                    <button onclick="changeScreen('sub-sudoku')" class="bg-slate-200 p-2 rounded-full flex items-center"><span class="material-icons">arrow_back</span></button>
+                    <h3 class="font-black text-xl text-purple-600" id="sudoku-title">Sudoku 4x4</h3>
+                    <div class="w-8"></div>
+                </div>
+
+                <p class="text-center text-xs font-bold text-slate-500">Isi setiap baris, lajur, dan kotak 2x2 dengan nombor 1 hingga 4!</p>
+                
+                <!-- GRID REKAAN SUDOKU -->
+                <div class="sudoku-grid" id="sudoku-board-container"></div>
+
+                <!-- KEYPAD DIGITAL KHAS SUDOKU (1-4) -->
+                <div class="bg-white/90 border border-slate-200 p-3 rounded-2xl shadow-sm space-y-2 max-w-[280px] mx-auto">
+                    <div class="grid grid-cols-4 gap-2">
+                        <button onclick="pressSudokuNumber(1)" class="p-3 bg-purple-500 text-white font-black text-2xl rounded-xl shadow-sm hover:bg-purple-600">1</button>
+                        <button onclick="pressSudokuNumber(2)" class="p-3 bg-purple-500 text-white font-black text-2xl rounded-xl shadow-sm hover:bg-purple-600">2</button>
+                        <button onclick="pressSudokuNumber(3)" class="p-3 bg-purple-500 text-white font-black text-2xl rounded-xl shadow-sm hover:bg-purple-600">3</button>
+                        <button onclick="pressSudokuNumber(4)" class="p-3 bg-purple-500 text-white font-black text-2xl rounded-xl shadow-sm hover:bg-purple-600">4</button>
+                    </div>
+                    <button onclick="clearSudokuCell()" class="w-full py-2 bg-slate-500 text-white font-black text-xs rounded-lg shadow-sm hover:bg-slate-600 flex items-center justify-center gap-1">
+                        <span class="material-icons text-sm">clear</span> Padam Jawapan Petak
+                    </button>
+                </div>
+
+                <button onclick="checkSudokuSolution()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3 rounded-xl shadow-md border-b-4 border-emerald-700 transition-all">
+                    Semak Jawapan Sudoku 🧩
+                </button>
+
+                <div id="sudoku-feedback" class="hidden text-center p-3 rounded-xl font-black text-md"></div>
             </section>
 
             <!-- 4. HALAMAN STATISTIK -->
@@ -347,8 +441,8 @@
             <button onclick="changeScreen('sub-sifir')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-orange-500 font-bold text-xs">
                 <span class="material-icons text-2xl">edit</span> Sifir
             </button>
-            <button onclick="changeScreen('stats')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500 font-bold text-xs">
-                <span class="material-icons text-2xl">bar_chart</span> Grafik
+            <button onclick="changeScreen('sub-sudoku')" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-purple-500 font-bold text-xs">
+                <span class="material-icons text-2xl">grid_on</span> Sudoku
             </button>
         </footer>
 
@@ -369,11 +463,35 @@
         let currentQuestion = { num1: 0, num2: 0, correct: 0 };
         let activeInputTarget = 'ans-sa'; 
         
-        let manualData = {
-            carryPuluh: "",
-            ansRatus: "",
-            ansPuluh: "",
-            ansSa: ""
+        let manualData = { carryPuluh: "", ansRatus: "", ansPuluh: "", ansSa: "" };
+
+        // Data Sudoku
+        let sudokuLevel = 'easy';
+        let sudokuActiveCellIndex = null;
+        let sudokuUserBoard = [];
+        
+        // Papan induk penyelesaian penuh sudoku 4x4
+        const sudokuSolution = [
+            1, 2, 3, 4,
+            3, 4, 1, 2,
+            2, 3, 4, 1,
+            4, 1, 2, 3
+        ];
+
+        // Masking petak kosong: nilai 0 bermaksud petak dikosongkan untuk diisi murid
+        const sudokuMaps = {
+            easy: [
+                1, 0, 3, 4,
+                3, 4, 0, 2,
+                2, 0, 4, 1,
+                4, 1, 2, 0
+            ],
+            intermediate: [
+                0, 2, 0, 4,
+                3, 0, 1, 0,
+                0, 3, 0, 1,
+                4, 0, 2, 0
+            ]
         };
 
         const emojiList = ['🍎', '🍓', '🎈', '⭐', '🚗', '🐱', '🦖', '🍬', '🍩', '🚀', '🐝', '🐼', '🌻', '⚽'];
@@ -394,18 +512,15 @@
         }
 
         function changeScreen(screenId) {
-            const screens = ['screen-login', 'screen-home', 'screen-sub-tambah', 'screen-sub-sifir', 'screen-exercise', 'screen-stats'];
+            const screens = ['screen-login', 'screen-home', 'screen-sub-tambah', 'screen-sub-sifir', 'screen-sub-sudoku', 'screen-exercise', 'screen-sudoku-game', 'screen-stats'];
             screens.forEach(s => document.getElementById(s).classList.add('hidden'));
             document.getElementById(`screen-${screenId}`).classList.remove('hidden');
             if(screenId === 'stats') updateStatsUI();
         }
 
         function goBackFromExercise() {
-            if(currentMode.startsWith('tambah')) {
-                changeScreen('sub-tambah');
-            } else {
-                changeScreen('sub-sifir');
-            }
+            if(currentMode.startsWith('tambah')) changeScreen('sub-tambah');
+            else changeScreen('sub-sifir');
         }
 
         function openExercise(mode) {
@@ -429,7 +544,6 @@
                 titleElement.innerText = "Tambah Beginner";
                 titleElement.className = "font-black text-xl text-teal-600";
                 subElement.innerText = "Kira Gambar 1 Digit";
-                subElement.classList.remove('hidden');
                 document.getElementById('exercise-operator').className = "text-2xl font-black text-purple-600 my-1";
                 document.getElementById('exercise-operator').innerText = "+";
                 document.getElementById('exercise-text-question').className = "text-3xl font-black text-slate-700 mt-2 pt-2 border-t border-dashed border-amber-200 w-full";
@@ -437,15 +551,12 @@
                 titleElement.innerText = "Tambah Advanced";
                 titleElement.className = "font-black text-xl text-pink-600";
                 subElement.innerText = "Kira Gambar 2 Digit";
-                subElement.classList.remove('hidden');
                 document.getElementById('exercise-operator').className = "text-2xl font-black text-purple-600 my-1";
                 document.getElementById('exercise-operator').innerText = "+";
                 document.getElementById('exercise-text-question').className = "text-3xl font-black text-slate-700 mt-2 pt-2 border-t border-dashed border-amber-200 w-full";
             } else if(mode === 'tambah-lazim') {
                 titleElement.innerText = "Bentuk Lazim 2 Digit";
                 titleElement.className = "font-black text-xl text-indigo-600";
-                subElement.innerText = "Pilih nombor di bawah untuk mengisi petak";
-                subElement.classList.remove('hidden');
                 visualBox.classList.add('hidden');
                 optionsBox.classList.add('hidden'); 
                 lazimBox.classList.remove('hidden');
@@ -455,14 +566,12 @@
             } else if(mode === 'sifir') {
                 titleElement.innerText = "Latihan Sifir";
                 titleElement.className = "font-black text-xl text-purple-600";
-                subElement.classList.add('hidden'); 
                 questionBox.className = "sifir-glow-card p-8 rounded-[32px] text-center flex flex-col items-center justify-center relative border-4 border-white/40 floating-icon";
                 document.getElementById('exercise-operator').className = "hidden";
                 document.getElementById('exercise-text-question').className = "text-5xl sm:text-6xl font-black text-white tracking-wide drop-shadow-md";
             } else if(mode === 'sifir-lazim') {
                 titleElement.innerText = "Sifir Bentuk Lazim";
                 titleElement.className = "font-black text-xl text-fuchsia-600";
-                subElement.classList.add('hidden'); 
                 visualBox.classList.add('hidden');
                 optionsBox.classList.add('hidden');
                 lazimBox.classList.remove('hidden');
@@ -490,7 +599,6 @@
                 document.getElementById('exercise-text-question').innerText = `${num1} + ${num2} = ?`;
                 for(let i = 0; i < num1; i++) part1Container.innerHTML += `<span>${randomEmoji}</span>`;
                 for(let i = 0; i < num2; i++) part2Container.innerHTML += `<span>${randomEmoji}</span>`;
-                
             } else if(currentMode === 'tambah-2') {
                 num1 = Math.floor(Math.random() * 10) + 1;
                 num2 = Math.floor(Math.random() * 10) + 1;
@@ -498,17 +606,14 @@
                 document.getElementById('exercise-text-question').innerText = `${num1} + ${num2} = ?`;
                 for(let i = 0; i < num1; i++) part1Container.innerHTML += `<span>${randomEmoji}</span>`;
                 for(let i = 0; i < num2; i++) part2Container.innerHTML += `<span>${randomEmoji}</span>`;
-                
             } else if(currentMode === 'tambah-lazim') {
                 num1 = Math.floor(Math.random() * 39) + 10;
                 num2 = Math.floor(Math.random() * 39) + 10;
                 correctResult = num1 + num2;
-
                 document.getElementById('l-num1-p').innerText = Math.floor(num1 / 10);
                 document.getElementById('l-num1-s').innerText = num1 % 10;
                 document.getElementById('l-num2-p').innerText = Math.floor(num2 / 10);
                 document.getElementById('l-num2-s').innerText = num2 % 10;
-
                 manualData = { carryPuluh: "", ansRatus: "", ansPuluh: "", ansSa: "" };
                 renderBoxValues();
                 setActiveInput('ans-sa');
@@ -521,12 +626,10 @@
                 num1 = Math.floor(Math.random() * 89) + 10; 
                 num2 = Math.floor(Math.random() * 8) + 2;   
                 correctResult = num1 * num2;
-
                 document.getElementById('l-num1-p').innerText = Math.floor(num1 / 10);
                 document.getElementById('l-num1-s').innerText = num1 % 10;
                 document.getElementById('l-num2-p').innerText = ""; 
                 document.getElementById('l-num2-s').innerText = num2;
-
                 manualData = { carryPuluh: "", ansRatus: "", ansPuluh: "", ansSa: "" };
                 renderBoxValues();
                 setActiveInput('ans-sa');
@@ -542,11 +645,9 @@
                     let fake = correctResult + deviation;
                     if(fake > 0 && fake !== correctResult && fake <= 200) options.add(fake);
                 }
-
                 const optionsArray = Array.from(options).sort(() => Math.random() - 0.5);
                 const optionsContainer = document.getElementById('exercise-options');
                 optionsContainer.innerHTML = '';
-                
                 optionsArray.forEach((opt, index) => {
                     const btn = document.createElement('button');
                     if(currentMode === 'sifir') {
@@ -567,7 +668,6 @@
             document.getElementById('box-ans-ratus').classList.remove('active-input');
             document.getElementById('box-ans-puluh').classList.remove('active-input');
             document.getElementById('box-ans-sa').classList.remove('active-input');
-
             if(targetId === 'carry-puluh') document.getElementById('box-carry-puluh').classList.add('active-input');
             if(targetId === 'ans-ratus') document.getElementById('box-ans-ratus').classList.add('active-input');
             if(targetId === 'ans-puluh') document.getElementById('box-ans-puluh').classList.add('active-input');
@@ -596,9 +696,7 @@
             const bRatus = document.getElementById('box-ans-ratus');
             const bPuluh = document.getElementById('box-ans-puluh');
             const bSa = document.getElementById('box-ans-sa');
-
             bCarry.innerHTML = manualData.carryPuluh !== "" ? manualData.carryPuluh : "&nbsp;";
-            
             const updateBox = (box, val) => {
                 if(val !== "") {
                     box.innerText = val;
@@ -608,7 +706,6 @@
                     box.className = "lazim-box bg-slate-100 border-2 border-slate-300 text-slate-400 font-black";
                 }
             };
-
             updateBox(bRatus, manualData.ansRatus);
             updateBox(bPuluh, manualData.ansPuluh);
             updateBox(bSa, manualData.ansSa);
@@ -620,7 +717,6 @@
                 alert("Sila isi petak jawapan unit Sa dan Puluh terlebih dahulu!");
                 return;
             }
-
             let studentTotalStr = manualData.ansPuluh + manualData.ansSa;
             if(currentMode === 'sifir-lazim' && manualData.ansRatus !== "") {
                 studentTotalStr = manualData.ansRatus + studentTotalStr;
@@ -644,6 +740,126 @@
             }
         }
 
+        // FUNGSI UTAMA GAMEPLAY SUDOKU 4X4
+        function openSudoku(level) {
+            sudokuLevel = level;
+            sudokuActiveCellIndex = null;
+            document.getElementById('sudoku-title').innerText = level === 'easy' ? "Sudoku 4x4 (Easy)" : "Sudoku 4x4 (Intermediate)";
+            document.getElementById('sudoku-feedback').classList.add('hidden');
+            
+            // Salin templat asal berdasarkan kesukaran
+            sudokuUserBoard = [...sudokuMaps[level]];
+            renderSudokuBoard();
+            changeScreen('sudoku-game');
+        }
+
+        function renderSudokuBoard() {
+            const container = document.getElementById('sudoku-board-container');
+            container.innerHTML = '';
+            
+            const originalTemplate = sudokuMaps[sudokuLevel];
+
+            for (let i = 0; i < 16; i++) {
+                const cell = document.createElement('div');
+                const isSystemGiven = originalTemplate[i] !== 0; // Nombor asal dari sistem
+
+                if (isSystemGiven) {
+                    cell.className = "sudoku-cell bg-slate-200 text-slate-800 font-extrabold cursor-not-allowed";
+                    cell.innerText = sudokuUserBoard[i];
+                } else {
+                    // Petak boleh diisi murid
+                    if (sudokuUserBoard[i] !== 0) {
+                        cell.innerText = sudokuUserBoard[i];
+                        cell.className = "sudoku-cell text-blue-600 bg-white border border-slate-300";
+                    } else {
+                        cell.innerText = "";
+                        cell.className = "sudoku-cell text-transparent bg-slate-50 border border-dashed border-slate-300";
+                    }
+
+                    // Gandingan efek pilihan petak aktif
+                    if (sudokuActiveCellIndex === i) {
+                        cell.classList.add('border-purple-600', 'bg-purple-50', 'ring-2', 'ring-purple-300');
+                    }
+
+                    cell.onclick = () => {
+                        sudokuActiveCellIndex = i;
+                        renderSudokuBoard();
+                    };
+                }
+                container.appendChild(cell);
+            }
+        }
+
+        function pressSudokuNumber(num) {
+            if (sudokuActiveCellIndex === null) {
+                alert("Sila klik salah satu petak kosong pada papan Sudoku dahulu!");
+                return;
+            }
+            sudokuUserBoard[sudokuActiveCellIndex] = num;
+            renderSudokuBoard();
+        }
+
+        function clearSudokuCell() {
+            if (sudokuActiveCellIndex !== null) {
+                sudokuUserBoard[sudokuActiveCellIndex] = 0;
+                renderSudokuBoard();
+            }
+        }
+
+        function checkSudokuSolution() {
+            // Pastikan semua petak telah diisi murid
+            if (sudokuUserBoard.includes(0)) {
+                alert("Sila penuhkan semua petak kosong terlebih dahulu!");
+                return;
+            }
+
+            let isCorrect = true;
+            for (let i = 0; i < 16; i++) {
+                if (sudokuUserBoard[i] !== sudokuSolution[i]) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+
+            const feedback = document.getElementById('sudoku-feedback');
+            feedback.classList.remove('hidden');
+
+            if (isCorrect) {
+                player.totalAnswers++;
+                player.correctAnswers++;
+                feedback.className = "text-center p-3 rounded-xl font-black text-md bg-green-100 text-green-700";
+                feedback.innerText = "🎉 BIJAK! Susunan Sudoku tepat dan sempurna! (+20 XP)";
+                
+                player.xp += 20;
+                player.stars += 5;
+                player.coins += 10;
+                confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+
+                if (player.xp >= 100) {
+                    player.level++;
+                    player.xp = player.xp % 100;
+                }
+                updateHeaderData();
+                setTimeout(() => changeScreen('sub-sudoku'), 2500);
+            } else {
+                player.totalAnswers++;
+                feedback.className = "text-center p-3 rounded-xl font-black text-md bg-red-100 text-red-700";
+                feedback.innerText = "❌ Alamak! Ada susunan nombor yang bertembung/salah. Cubalah lagi! (-10 XP)";
+                
+                player.xp -= 10;
+                if (player.xp < 0) {
+                    if (player.level > 1) {
+                        player.level--;
+                        player.xp = 90;
+                    } else {
+                        player.xp = 0;
+                    }
+                }
+                updateHeaderData();
+            }
+        }
+
+        // PENGURUSAN GANJARAN & LEVEL GLOBAL
         function processCorrectAnswer() {
             player.totalAnswers++;
             player.correctAnswers++;
@@ -653,14 +869,11 @@
             feedback.className = "text-center p-3 rounded-xl font-black text-lg bg-green-100 text-green-700 w-full";
             feedback.innerText = "🎉 TAHNIAH! Jawapan kamu tepat dan betul! 👍 (+20 XP)";
             
-            // Tambah XP dan ganjaran
             player.xp += 20; 
             player.stars += 3; 
             player.coins += 5;
-            
             confetti({ particleCount: 70, spread: 60, origin: { y: 0.7 } });
             
-            // Logik Naik Level
             if(player.xp >= 100) {
                 player.level++;
                 player.xp = player.xp % 100;
@@ -677,16 +890,13 @@
             feedback.className = "text-center p-3 rounded-xl font-black text-lg bg-red-100 text-red-700 w-full";
             feedback.innerText = `❌ ${message} (-10 XP)`;
             
-            // Tolak XP untuk jawapan salah
             player.xp -= 10;
-            
-            // Logik Turun Level jika XP jatuh di bawah 0
             if(player.xp < 0) {
                 if(player.level > 1) {
                     player.level--;
-                    player.xp = 90; // Beri 90 XP pada tahap bawah untuk elakkan drop terlalu jauh
+                    player.xp = 90;
                 } else {
-                    player.xp = 0; // Kekalkan 0 XP jika masih di Level 1
+                    player.xp = 0;
                 }
             }
             updateHeaderData();
