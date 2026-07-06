@@ -245,14 +245,6 @@
                         </div>
                         <span class="material-icons text-2xl">flash_on</span>
                     </button>
-
-                    <button onclick="openExercise('sifir-lazim')" class="w-full p-4 bg-gradient-to-r from-fuchsia-400 to-purple-600 text-white rounded-2xl shadow-md border-b-4 border-purple-800 text-left flex items-center justify-between bounce-hover">
-                        <div>
-                            <div class="font-black text-lg">📝 Bentuk Lazim Sifir (2x2 Digit)</div>
-                            <div class="text-xs text-fuchsia-100 font-bold mt-0.5">Sifir 2 Digit menegak (Contoh: 24 × 13)</div>
-                        </div>
-                        <span class="material-icons text-2xl">format_align_right</span>
-                    </button>
                 </div>
             </section>
 
@@ -303,7 +295,7 @@
                         </div>
                     </div>
 
-                    <!-- KONTEN BENTUK LAZIM (TAMBAH & SIFIR BARU 2x2) -->
+                    <!-- KONTEN BENTUK LAZIM (TAMBAH) -->
                     <div id="container-lazim-mode" class="hidden py-3 px-4 bg-white border-2 border-slate-200 rounded-2xl shadow-sm w-full max-w-[320px]">
                         <table class="lazim-table mx-auto text-slate-700 table-fixed">
                             <!-- Baris Nilai Bawa (Carry) -->
@@ -329,24 +321,6 @@
                                 <td id="l-num2-p" class="text-center">1</td>
                                 <td id="l-num2-s" class="text-center">3</td>
                                 <td></td>
-                            </tr>
-                            
-                            <!-- BLOK TAMBAHAN SIFIR 2x2 DIGIT -->
-                            <!-- Hasil Pendaraban Baris 1 -->
-                            <tr id="row-sifir-pendaraban1" class="hidden">
-                                <td></td>
-                                <td class="p-0.5"><div id="box-p1-r" onclick="setActiveInput('p1-r')" class="lazim-box bg-slate-100 border-2 border-slate-300 text-slate-400 font-black text-xl">?</div></td>
-                                <td class="p-0.5"><div id="box-p1-p" onclick="setActiveInput('p1-p')" class="lazim-box bg-slate-100 border-2 border-slate-300 text-slate-400 font-black text-xl">?</div></td>
-                                <td class="p-0.5"><div id="box-p1-s" onclick="setActiveInput('p1-s')" class="lazim-box bg-slate-100 border-2 border-slate-300 text-slate-400 font-black text-xl">?</div></td>
-                                <td></td>
-                            </tr>
-                            <!-- Hasil Pendaraban Baris 2 -->
-                            <tr id="row-sifir-pendaraban2" class="hidden border-b-4 border-slate-800">
-                                <td class="text-sm font-sans text-center text-indigo-600 font-bold">+</td>
-                                <td class="p-0.5"><div id="box-p2-r" onclick="setActiveInput('p2-r')" class="lazim-box bg-slate-100 border-2 border-slate-300 text-slate-400 font-black text-xl">?</div></td>
-                                <td class="p-0.5"><div id="box-p2-p" onclick="setActiveInput('p2-p')" class="lazim-box bg-slate-100 border-2 border-slate-300 text-slate-400 font-black text-xl">?</div></td>
-                                <td class="p-0.5"><div id="box-p2-s" onclick="setActiveInput('p2-s')" class="lazim-box bg-slate-100 border-2 border-slate-300 text-slate-400 font-black text-xl">?</div></td>
-                                <td class="text-center text-xl text-slate-400">0</td>
                             </tr>
 
                             <!-- Baris Jawapan Akhir Utama -->
@@ -571,8 +545,6 @@
             optionsBox.classList.remove('hidden');
             keyboardBox.classList.add('hidden');
             
-            document.getElementById('row-sifir-pendaraban1').classList.add('hidden');
-            document.getElementById('row-sifir-pendaraban2').classList.add('hidden');
             document.getElementById('box-ans-ribu').style.visibility = 'visible';
             document.getElementById('box-ans-ratus').style.visibility = 'visible';
             document.getElementById('box-carry-2').style.visibility = 'visible';
@@ -609,19 +581,6 @@
                 questionBox.className = "sifir-glow-card p-8 rounded-[32px] text-center flex flex-col items-center justify-center relative border-4 border-white/40 floating-icon";
                 document.getElementById('exercise-operator').className = "hidden";
                 document.getElementById('exercise-text-question').className = "text-5xl sm:text-6xl font-black text-white tracking-wide drop-shadow-md";
-            } else if(mode === 'sifir-lazim') {
-                titleElement.innerText = "Bentuk Lazim Sifir (2x2)";
-                titleElement.className = "font-black text-xl text-fuchsia-600";
-                subElement.innerText = "Sifir Gergasi Menegak";
-                visualBox.classList.add('hidden');
-                optionsBox.classList.add('hidden');
-                lazimBox.classList.remove('hidden');
-                keyboardBox.classList.remove('hidden');
-                document.getElementById('l-operator').innerText = "×";
-                
-                // Paparkan baris pendaraban untuk 2x2 digit
-                document.getElementById('row-sifir-pendaraban1').classList.remove('hidden');
-                document.getElementById('row-sifir-pendaraban2').classList.remove('hidden');
             }
 
             changeScreen('exercise');
@@ -635,7 +594,8 @@
 
             const part1Container = document.getElementById('visual-part-1');
             const part2Container = document.getElementById('visual-part-2');
-            part1Container.innerHTML = ''; part2Container.innerHTML = '';
+            if(part1Container) part1Container.innerHTML = ''; 
+            if(part2Container) part2Container.innerHTML = '';
 
             if(currentMode === 'tambah-1') {
                 num1 = Math.floor(Math.random() * 9) + 1;
@@ -668,23 +628,11 @@
                 num2 = Math.floor(Math.random() * 12) + 1; 
                 correctResult = num1 * num2;
                 document.getElementById('exercise-text-question').innerText = `${num1} × ${num2} = ?`;
-            } else if(currentMode === 'sifir-lazim') {
-                num1 = Math.floor(Math.random() * 40) + 11; // Contoh: 24
-                num2 = Math.floor(Math.random() * 40) + 11; // Contoh: 13
-                correctResult = num1 * num2;
-                document.getElementById('l-num1-p').innerText = Math.floor(num1 / 10);
-                document.getElementById('l-num1-s').innerText = num1 % 10;
-                document.getElementById('l-num2-p').innerText = Math.floor(num2 / 10); 
-                document.getElementById('l-num2-s').innerText = num2 % 10;
-                
-                manualData = { carry1: "", carry2: "", carry3: "", p1_s: "", p1_p: "", p1_r: "", p2_s: "", p2_p: "", p2_r: "", ansRibu: "", ansRatus: "", ansPuluh: "", ansSa: "" };
-                renderBoxValues();
-                setActiveInput('ans-sa');
             }
 
             currentQuestion = { num1, num2, correct: correctResult };
 
-            if(currentMode !== 'tambah-lazim' && currentMode !== 'sifir-lazim') {
+            if(currentMode !== 'tambah-lazim') {
                 let options = new Set();
                 options.add(correctResult);
                 while(options.size < 4) {
@@ -711,12 +659,13 @@
         }
 
         function setActiveInput(targetId) {
-            const targets = ['carry-1', 'carry-2', 'carry-3', 'p1-s', 'p1-p', 'p1-r', 'p2-s', 'p2-p', 'p2-r', 'ans-ribu', 'ans-ratus', 'ans-puluh', 'ans-sa'];
+            const targets = ['carry-1', 'carry-2', 'carry-3', 'ans-ribu', 'ans-ratus', 'ans-puluh', 'ans-sa'];
             targets.forEach(t => {
                 const el = document.getElementById(`box-${t}`);
                 if(el) el.classList.remove('active-input');
             });
-            document.getElementById(`box-${targetId}`).classList.add('active-input');
+            const activeEl = document.getElementById(`box-${targetId}`);
+            if(activeEl) activeEl.classList.add('active-input');
             activeInputTarget = targetId;
         }
 
@@ -724,12 +673,6 @@
             if(activeInputTarget === 'carry-1') manualData.carry1 = num.toString();
             else if(activeInputTarget === 'carry-2') manualData.carry2 = num.toString();
             else if(activeInputTarget === 'carry-3') manualData.carry3 = num.toString();
-            else if(activeInputTarget === 'p1-s') manualData.p1_s = num.toString();
-            else if(activeInputTarget === 'p1-p') manualData.p1_p = num.toString();
-            else if(activeInputTarget === 'p1-r') manualData.p1_r = num.toString();
-            else if(activeInputTarget === 'p2-s') manualData.p2_s = num.toString();
-            else if(activeInputTarget === 'p2-p') manualData.p2_p = num.toString();
-            else if(activeInputTarget === 'p2-r') manualData.p2_r = num.toString();
             else if(activeInputTarget === 'ans-ribu') manualData.ansRibu = num.toString();
             else if(activeInputTarget === 'ans-ratus') manualData.ansRatus = num.toString();
             else if(activeInputTarget === 'ans-puluh') manualData.ansPuluh = num.toString();
@@ -741,12 +684,6 @@
             if(activeInputTarget === 'carry-1') manualData.carry1 = "";
             else if(activeInputTarget === 'carry-2') manualData.carry2 = "";
             else if(activeInputTarget === 'carry-3') manualData.carry3 = "";
-            else if(activeInputTarget === 'p1-s') manualData.p1_s = "";
-            else if(activeInputTarget === 'p1-p') manualData.p1_p = "";
-            else if(activeInputTarget === 'p1-r') manualData.p1_r = "";
-            else if(activeInputTarget === 'p2-s') manualData.p2_s = "";
-            else if(activeInputTarget === 'p2-p') manualData.p2_p = "";
-            else if(activeInputTarget === 'p2-r') manualData.p2_r = "";
             else if(activeInputTarget === 'ans-ribu') manualData.ansRibu = "";
             else if(activeInputTarget === 'ans-ratus') manualData.ansRatus = "";
             else if(activeInputTarget === 'ans-puluh') manualData.ansPuluh = "";
@@ -755,9 +692,9 @@
         }
 
         function renderBoxValues() {
-            document.getElementById('box-carry-1').innerHTML = manualData.carry1 !== "" ? manualData.carry1 : "&nbsp;";
-            document.getElementById('box-carry-2').innerHTML = manualData.carry2 !== "" ? manualData.carry2 : "&nbsp;";
-            document.getElementById('box-carry-3').innerHTML = manualData.carry3 !== "" ? manualData.carry3 : "&nbsp;";
+            if(document.getElementById('box-carry-1')) document.getElementById('box-carry-1').innerHTML = manualData.carry1 !== "" ? manualData.carry1 : "&nbsp;";
+            if(document.getElementById('box-carry-2')) document.getElementById('box-carry-2').innerHTML = manualData.carry2 !== "" ? manualData.carry2 : "&nbsp;";
+            if(document.getElementById('box-carry-3')) document.getElementById('box-carry-3').innerHTML = manualData.carry3 !== "" ? manualData.carry3 : "&nbsp;";
             
             const updateBox = (boxId, val) => {
                 const box = document.getElementById(boxId);
@@ -770,13 +707,6 @@
                     box.className = "lazim-box bg-slate-100 border-2 border-slate-300 text-slate-400 font-black text-xl";
                 }
             };
-
-            updateBox('box-p1-s', manualData.p1_s);
-            updateBox('box-p1-p', manualData.p1_p);
-            updateBox('box-p1-r', manualData.p1_r);
-            updateBox('box-p2-s', manualData.p2_s);
-            updateBox('box-p2-p', manualData.p2_p);
-            updateBox('box-p2-r', manualData.p2_r);
             
             updateBox('box-ans-ribu', manualData.ansRibu);
             updateBox('box-ans-ratus', manualData.ansRatus);
