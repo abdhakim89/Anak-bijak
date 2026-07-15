@@ -108,7 +108,6 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        /* Pembahagi Blok 2x2 Sudoku */
         .sudoku-grid .sudoku-cell:nth-child(2),
         .sudoku-grid .sudoku-cell:nth-child(6),
         .sudoku-grid .sudoku-cell:nth-child(10),
@@ -240,11 +239,38 @@
                 <div class="space-y-3 pt-1">
                     <button onclick="openExercise('sifir')" class="w-full p-4 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-2xl shadow-md border-b-4 border-orange-700 text-left flex items-center justify-between bounce-hover">
                         <div>
-                            <div class="font-black text-lg">⚡ Mod Objektif</div>
+                            <div class="font-black text-lg">⚡ Mod Objektif Campuran</div>
                             <div class="text-xs text-amber-100 font-bold mt-0.5">Sifir 2 hingga 11 (Pilihan Jawapan Ceria)</div>
                         </div>
                         <span class="material-icons text-2xl">flash_on</span>
                     </button>
+
+                    <button onclick="changeScreen('sub-teka-sifir')" class="w-full p-4 bg-gradient-to-r from-violet-400 to-fuchsia-500 text-white rounded-2xl shadow-md border-b-4 border-fuchsia-700 text-left flex items-center justify-between bounce-hover">
+                        <div>
+                            <div class="font-black text-lg">🎯 Mod Teka Sifir (2-9)</div>
+                            <div class="text-xs text-fuchsia-100 font-bold mt-0.5">Pilih dan fokus kuiz satu per satu sifir khusus!</div>
+                        </div>
+                        <span class="material-icons text-2xl">extension</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- SUB-HALAMAN BARU: SELEKSI TEKA SIFIR BERASINGAN (2-9) -->
+            <section id="screen-sub-teka-sifir" class="hidden space-y-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="changeScreen('sub-sifir')" class="bg-slate-200 p-2 rounded-full flex items-center"><span class="material-icons">arrow_back</span></button>
+                    <h3 class="font-black text-xl text-fuchsia-600">Pilih Sifir Kamu</h3>
+                </div>
+                <p class="text-xs font-bold text-slate-500">Pilih satu sifir yang ingin kamu teka dan kuasai hari ini:</p>
+                <div class="grid grid-cols-2 gap-3 pt-1">
+                    <button onclick="openSpecificSifir(2)" class="p-4 bg-rose-500 text-white rounded-xl shadow-md font-black text-lg bounce-hover border-b-4 border-rose-700">Sifir 2 🍎</button>
+                    <button onclick="openSpecificSifir(3)" class="p-4 bg-orange-500 text-white rounded-xl shadow-md font-black text-lg bounce-hover border-b-4 border-orange-700">Sifir 3 🍊</button>
+                    <button onclick="openSpecificSifir(4)" class="p-4 bg-amber-500 text-white rounded-xl shadow-md font-black text-lg bounce-hover border-b-4 border-amber-700">Sifir 4 🍋</button>
+                    <button onclick="openSpecificSifir(5)" class="p-4 bg-emerald-500 text-white rounded-xl shadow-md font-black text-lg bounce-hover border-b-4 border-emerald-700">Sifir 5 🍏</button>
+                    <button onclick="openSpecificSifir(6)" class="p-4 bg-teal-500 text-white rounded-xl shadow-md font-black text-lg bounce-hover border-b-4 border-teal-700">Sifir 6 💧</button>
+                    <button onclick="openSpecificSifir(7)" class="p-4 bg-blue-500 text-white rounded-xl shadow-md font-black text-lg bounce-hover border-b-4 border-blue-700">Sifir 7 🍇</button>
+                    <button onclick="openSpecificSifir(8)" class="p-4 bg-indigo-500 text-white rounded-xl shadow-md font-black text-lg bounce-hover border-b-4 border-indigo-700">Sifir 8 🔮</button>
+                    <button onclick="openSpecificSifir(9)" class="p-4 bg-purple-500 text-white rounded-xl shadow-md font-black text-lg bounce-hover border-b-4 border-purple-700">Sifir 9 🎀</button>
                 </div>
             </section>
 
@@ -461,10 +487,10 @@
         };
 
         let currentMode = 'tambah-1'; 
+        let selectedSpecificSifirNum = 2; // Pembolehubah untuk menyimpan sifir khusus pilihan (2-9)
         let currentQuestion = { num1: 0, num2: 0, correct: 0 };
         let activeInputTarget = 'ans-sa'; 
         
-        // Memuatkan data input berbilang baris untuk bentuk lazim
         let manualData = { 
             carry1: "", carry2: "", carry3: "",
             p1_s: "", p1_p: "", p1_r: "",
@@ -472,7 +498,6 @@
             ansRibu: "", ansRatus: "", ansPuluh: "", ansSa: "" 
         };
 
-        // Data Sudoku
         let sudokuLevel = 'easy';
         let sudokuActiveCellIndex = null;
         let sudokuUserBoard = [];
@@ -517,15 +542,25 @@
         }
 
         function changeScreen(screenId) {
-            const screens = ['screen-login', 'screen-home', 'screen-sub-tambah', 'screen-sub-sifir', 'screen-sub-sudoku', 'screen-exercise', 'screen-sudoku-game', 'screen-stats'];
+            const screens = ['screen-login', 'screen-home', 'screen-sub-tambah', 'screen-sub-sifir', 'screen-sub-teka-sifir', 'screen-exercise', 'screen-sudoku-game', 'screen-stats'];
             screens.forEach(s => document.getElementById(s).classList.add('hidden'));
             document.getElementById(`screen-${screenId}`).classList.remove('hidden');
             if(screenId === 'stats') updateStatsUI();
         }
 
         function goBackFromExercise() {
-            if(currentMode.startsWith('tambah')) changeScreen('sub-tambah');
-            else changeScreen('sub-sifir');
+            if(currentMode.startsWith('tambah')) {
+                changeScreen('sub-tambah');
+            } else if(currentMode === 'teka-sifir-spesifik') {
+                changeScreen('sub-teka-sifir');
+            } else {
+                changeScreen('sub-sifir');
+            }
+        }
+
+        function openSpecificSifir(sifirNum) {
+            selectedSpecificSifirNum = sifirNum;
+            openExercise('teka-sifir-spesifik');
         }
 
         function openExercise(mode) {
@@ -538,7 +573,6 @@
             const optionsBox = document.getElementById('exercise-options');
             const keyboardBox = document.getElementById('container-keyboard');
 
-            // Tetapan semula asas UI
             questionBox.className = "bg-amber-50 border border-amber-200 p-4 rounded-3xl space-y-3 text-center shadow-inner flex flex-col items-center justify-center relative";
             visualBox.classList.remove('hidden');
             lazimBox.classList.add('hidden');
@@ -575,8 +609,8 @@
                 document.getElementById('box-ans-ribu').style.visibility = 'hidden'; 
                 document.getElementById('box-ans-ratus').style.visibility = 'hidden';
                 document.getElementById('box-carry-3').style.visibility = 'hidden';
-            } else if(mode === 'sifir') {
-                titleElement.innerText = "Latihan Sifir";
+            } else if(mode === 'sifir' || mode === 'teka-sifir-spesifik') {
+                titleElement.innerText = mode === 'sifir' ? "Latihan Sifir" : `Teka Sifir ${selectedSpecificSifirNum}`;
                 titleElement.className = "font-black text-xl text-purple-600";
                 questionBox.className = "sifir-glow-card p-8 rounded-[32px] text-center flex flex-col items-center justify-center relative border-4 border-white/40 floating-icon";
                 document.getElementById('exercise-operator').className = "hidden";
@@ -624,7 +658,12 @@
                 renderBoxValues();
                 setActiveInput('ans-sa');
             } else if(currentMode === 'sifir') {
-                num1 = Math.floor(Math.random() * 10) + 2; 
+                num1 = Math.floor(Math.random() * 8) + 2; 
+                num2 = Math.floor(Math.random() * 12) + 1; 
+                correctResult = num1 * num2;
+                document.getElementById('exercise-text-question').innerText = `${num1} × ${num2} = ?`;
+            } else if(currentMode === 'teka-sifir-spesifik') {
+                num1 = selectedSpecificSifirNum; 
                 num2 = Math.floor(Math.random() * 12) + 1; 
                 correctResult = num1 * num2;
                 document.getElementById('exercise-text-question').innerText = `${num1} × ${num2} = ?`;
@@ -645,7 +684,7 @@
                 optionsContainer.innerHTML = '';
                 optionsArray.forEach((opt, index) => {
                     const btn = document.createElement('button');
-                    if(currentMode === 'sifir') {
+                    if(currentMode === 'sifir' || currentMode === 'teka-sifir-spesifik') {
                         const colorClass = optionColors[index % optionColors.length];
                         btn.className = `p-5 ${colorClass} border-b-4 rounded-2xl font-black text-2xl shadow-md transition-all bounce-hover active:translate-y-1`;
                     } else {
@@ -745,7 +784,6 @@
             }
         }
 
-        // FUNGSI UTAMA GAMEPLAY SUDOKU 4X4
         function openSudoku(level) {
             sudokuLevel = level;
             sudokuActiveCellIndex = null;
@@ -857,7 +895,6 @@
             }
         }
 
-        // PENGURUSAN GANJARAN & LEVEL GLOBAL
         function processCorrectAnswer() {
             player.totalAnswers++;
             player.correctAnswers++;
